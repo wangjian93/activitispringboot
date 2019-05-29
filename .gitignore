@@ -7,3 +7,5 @@
 out
 gen
 .idea/
+*/target/
+*/.mvn/
