@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+
+</head>
+<body class="timo-layout-page">
+<div class="layui-card">
+    <div class="layui-card-header">
+        <span><i class="fa fa-bars"></i> 新产品费用总表</span>
+        <i class="layui-icon layui-icon-refresh refresh-btn"></i>
+    </div>
+
+    <div class="layui-card-body">
+
+        <div class="layui-row">
+            <div class="pull-left layui-form-pane timo-search-box">
+                <div class="layui-inline">
+                    <label class="layui-form-label">机种</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="projectName" th:value="${projectCost.getProjectName()}" placeholder="请输入机种" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn timo-search-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>阶段</th>
+                    <th>预防成本</th>
+                    <th>鉴定成本</th>
+                    <th>内损成本</th>
+                    <th>外损成本</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="phaseCost:${projectCost.getPhaseCosts()}">
+                    <td th:text="${phaseCost.getPhase()}">阶段</td>
+                    <td th:text="${phaseCost.getPrecautionCost()}">预防成本</td>
+                    <td th:text="${phaseCost.getIdentifyCost()}">鉴定成本</td>
+                    <td th:text="${phaseCost.getInLossCost()}">内损成本</td>
+                    <td th:text="${phaseCost.getOutLossCost()}">外损成本</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>阶段</th>
+                    <th>直接材料成本</th>
+                    <th>治工具</th>
+                    <th>验证费用</th>
+                    <th>生产费用</th>
+                    <th>重工/报废费用</th>
+                    <th>研发人员薪资</th>
+                    <th>RMA</th>
+                    <th>OBA</th>
+                    <th>差旅费</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="phaseCostDetail:${projectCost.getPhaseCostDetails()}">
+                    <td th:text="${phaseCostDetail.getPhase()}">阶段</td>
+                    <td th:text="${phaseCostDetail.getDirectMaterialCost()}">直接材料成本</td>
+                    <td th:text="${phaseCostDetail.getToolCost()}">治工具</td>
+                    <td th:text="${phaseCostDetail.getValidationCost()}">验证费用</td>
+                    <td th:text="${phaseCostDetail.getProductionCost()}">生产费用</td>
+                    <td th:text="${phaseCostDetail.getReworkAndScrapCost()}">重工/报废费用</td>
+                    <td th:text="${phaseCostDetail.getSalaryCost()}">研发人员薪资</td>
+                    <td th:text="${phaseCostDetail.getRmaCost()}">RMA</td>
+                    <td th:text="${phaseCostDetail.getObaCost()}">OBA</td>
+                    <td th:text="${phaseCostDetail.getTravelCost()}">差旅费</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</div>
+
+<script th:replace="/common/template :: script"></script>
+<script type="text/javascript" th:src="@{/lib/echarts/echarts.js}"></script>
+</body>
+</html>
