@@ -1,6 +1,5 @@
 package com.ivo.modules.system.service.impl;
 
-import com.ivo.common.enums.StatusEnum;
 import com.ivo.modules.system.domain.Menu;
 import com.ivo.modules.system.repository.MenuRepository;
 import com.ivo.modules.system.service.MenuService;
@@ -23,33 +22,32 @@ public class MenuServiceImpl implements MenuService {
     private MenuRepository menuRepository;
 
     /**
-     * 根据菜单ID查询菜单数据
-     * @param id 菜单ID
+     * 根据ID获取菜单数据
+     * @param id
+     * @return
      */
     @Override
-    public Menu getById(Long id) {
-        if (id == 0L){
-            return new Menu(id, "顶级菜单", "");
-        }
+    public Menu getMenuById(Long id) {
         return menuRepository.findById(id).orElse(null);
     }
 
     /**
-     * 获取菜单列表数据
+     * 获取所有菜单
+     * @return
      */
     @Override
-    public List<Menu> getListBySortOk() {
-        Sort sort = new Sort(Sort.Direction.ASC, "type", "sort");
-        return menuRepository.findAll(sort);
+    public List<Menu> getAllMenu() {
+        return menuRepository.findAll();
     }
 
     /**
-     * 获取菜单列表数据
+     * 根据查询实例获取菜单列表
      * @param example 查询实例
      * @param sort 排序对象
+     * @return
      */
     @Override
-    public List<Menu> getListByExample(Example<Menu> example, Sort sort) {
+    public List<Menu> getMenusByExample(Example<Menu> example, Sort sort) {
         return menuRepository.findAll(example, sort);
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head></head>
+    <body>
+
+        <div class="layui-side" th:fragment="side">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="admin-side-nav" lay-accordion="true" style="margin-top: 15px;">
+
+                    <li class="layui-nav-item" th:each="item:${treeMenu}">
+
+                        <a th:attr="lay-href=${item.value.url}">
+                            <i th:class="${item.value.icon}"></i>&emsp;
+                            <cite th:text="${item.value.title}"></cite>
+                        </a>
+
+                        <dl class="layui-nav-child" th:if="${item.value.children.size()}">
+
+                            <dd th:each="subItem:${item.value.children}">
+
+                                <a th:attr="lay-href=${subItem.value.url}" th:text="${subItem.value.title}"></a>
+
+                                <dl class="layui-nav-child" th:if="${subItem.value.children.size()}">
+
+                                    <dd th:each="thrItem:${subItem.value.children}">
+
+                                        <a th:attr="lay-url=${thrItem.value.url}" th:text="${thrItem.value.title}"></a>
+
+                                        <dl class="layui-nav-child" th:if="${thrItem.value.children.size()}">
+
+                                            <dd th:each="fourItem:${thrItem.value.children}">
+
+                                                <a th:attr="lay-url=${fourItem.value.url}" th:text="${fourItem.value.title}"></a>
+
+                                                <dl class="layui-nav-child" th:if="${fourItem.value.children.size()}">
+
+                                                    <dd th:each="fiveItem:${fourItem.value.children}">
+
+                                                        <a th:attr="lay-url=${fiveItem.value.url}" th:text="${fiveItem.value.title}"></a>
+
+                                                    </dd>
+                                                </dl>
+                                            </dd>
+                                        </dl>
+                                    </dd>
+                                </dl>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </body>
+</html>
+

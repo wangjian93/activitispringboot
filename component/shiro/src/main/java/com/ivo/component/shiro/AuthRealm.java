@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.util.Set;
 
 /**
+ * 用户认证以及授权
  * @Author: wj
  * @Date: 2019-05-29 14:16
  * @Version 1.0
@@ -77,7 +78,7 @@ public class AuthRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         // 获取数据库中的用户名密码
-        User user = userService.getByName(token.getUsername());
+        User user = userService.getUserById(token.getUsername());
         // 判断用户名是否存在
         if(user == null){
             throw new UnknownAccountException();

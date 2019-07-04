@@ -6,6 +6,8 @@ import com.ivo.modules.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author: wj
  * @Date: 2019-06-04 17:05
@@ -19,20 +21,20 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据用户ID获取用户信息
-     * @param id 用户ID
+     * @param id
+     * @return
      */
     @Override
-    public User getById(String id) {
+    public User getUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
     /**
-     * 根据用户名查询用户数据
-     * @param username 用户名
-     * @return 用户数据
+     * 获取所有用户
+     * @return
      */
     @Override
-    public User getByName(String username) {
-        return userRepository.findByUsername(username);
+    public List<User> getAllUser() {
+        return userRepository.findAll();
     }
 }

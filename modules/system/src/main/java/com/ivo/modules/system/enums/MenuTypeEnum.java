@@ -10,10 +10,10 @@ import lombok.Getter;
 @Getter
 public enum MenuTypeEnum {
 
-    TOP_LEVEL((byte)1, "一级菜单"),
-    SUB_LEVEL((byte)2, "子级菜单"),
-    NOT_MENU((byte)3, "不是菜单");
+    MENU((byte)1, "菜单"),
+    BUTTON((byte)2, "按钮"),
 
+    ;
     private Byte code;
 
     private String message;

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <div class="layui-header" th:fragment="header">
+
+            <div class="layui-logo">
+                <img th:src="@{/assets/images/logo.png}"/>
+                <cite>&nbsp;SOQ </cite>
+            </div>
+
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item" lay-unselect>
+                    <a ew-event="flexible" title="侧边伸缩"><i class="layui-icon layui-icon-shrink-right"></i></a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a ew-event="refresh" title="刷新"><i class="layui-icon layui-icon-refresh-3"></i></a>
+                </li>
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item" lay-unselect>
+                    <a ew-event="message" th:attr="data-url=@{/tpl/message}" title="消息"><i class="layui-icon layui-icon-notice"></i></a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a ew-event="note" th:attr="data-url=@{/tpl/note}" title="便签"><i class="layui-icon layui-icon-note"></i></a>
+                </li>
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a ew-event="fullScreen" title="全屏"><i class="layui-icon layui-icon-screen-full"></i></a>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a><img th:src="@{/assets/images/head.png}" class="layui-nav-img"><cite th:text="${user.username}"></cite></a>
+                    <dl class="layui-nav-child">
+                        <dd lay-unselect><a id="setInfo">个人信息</a></dd>
+                        <dd lay-unselect><a ew-event="psw" th:attr="data-url=@{/tpl/password}">修改密码</a></dd>
+                        <hr>
+                        <dd lay-unselect><a ew-event="logout" th:attr="data-url=@{/logout}">退出</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" lay-unselect>
+                    <a ew-event="theme" th:attr="data-url=@{/tpl/theme}" title="主题"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+            </ul>
+
+        </div>
+    </body>
+</html>

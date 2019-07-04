@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
+ * shiro配置
  * @Author: wj
  * @Date: 2019-05-29 14:41
  * @Version 1.0
@@ -59,6 +60,7 @@ public class ShiroConfig {
         filterMap.put("/js/**", "anon");
         filterMap.put("/images/**", "anon");
         filterMap.put("/lib/**", "anon");
+        filterMap.put("/assets/**", "anon");
         filterMap.put("/favicon.ico", "anon");
         filterMap.put("/actuator/**", "anon");
         filterMap.put("/**", "userAuth");
@@ -156,7 +158,7 @@ public class ShiroConfig {
     }
 
     /**
-     * 启用shrio授权注解拦截方式，AOP式方法级权限检查
+     * 启用shiro授权注解拦截方式，AOP式方法级权限检查
      */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {

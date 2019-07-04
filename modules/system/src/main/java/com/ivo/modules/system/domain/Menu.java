@@ -1,71 +1,83 @@
 package com.ivo.modules.system.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ivo.common.enums.StatusEnum;
+import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.system.model.Model;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 /**
+ * 菜单
  * @Author: wj
  * @Date: 2019-06-04 15:31
  * @Version 1.0
  */
+@Data
 @Entity
 @Table(name = "sys_menu")
-@Data
-public class Menu implements Serializable {
+@SQLDelete(sql = "update sys_menu" + StatusUtil.sliceDelete)
+@Where(clause = StatusUtil.notDelete)
+public class Menu extends Model  {
+
+    private static final long serialVersionUID = -7126363428726334075L;
+
+    /**
+     * ID
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * 上级菜单
+     */
     private Long pid;
+
+    /**
+     * 所有上级菜单 格式：[0],[2],[4]
+     */
     private String pids;
+
+    /**
+     * 菜单名称
+     */
     private String title;
+
+    /**
+     * 访问URL
+     */
     private String url;
+
+    /**
+     * 对应的权限标识
+     */
     private String perms;
+
+    /**
+     * 图标
+     */
     private String icon;
+
+    /**
+     * 类型
+     */
     private Byte type;
+
+    /**
+     * 排序
+     */
     private Integer sort;
-    private String remark;
 
-    private Date createDate;
-    private Date updateDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator")
-    @JsonIgnore
-    private User creator;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater")
-    @JsonIgnore
-    private User updater;
-
-    private Byte validFlag = StatusEnum.VALID.getCode();
-
+    /**
+     * 所属角色
+     */
     @ManyToMany(mappedBy = "menus")
-    @JsonIgnore
     private Set<Role> roles = new HashSet<>(0);
 
     @Transient
-    @JsonIgnore
     private Map<Long, Menu> children = new HashMap<>();
 
-    public Menu() {
-    }
-
-    public Menu(Long id, String title, String pids) {
-        this.id = id;
-        this.title = title;
-        this.pids = pids;
-    }
-
-    public void setPids(String pids) {
-        if (pids.startsWith(",")){
-            pids = pids.substring(1);
-        }
-        this.pids = pids;
-    }
 }

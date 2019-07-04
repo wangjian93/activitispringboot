@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 处理session超时问题拦截器
  * @Author: wj
  * @Date: 2019-05-29 15:34
  * @Version 1.0

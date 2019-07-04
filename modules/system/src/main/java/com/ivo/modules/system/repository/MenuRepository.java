@@ -11,10 +11,4 @@ import java.util.List;
  */
 public interface MenuRepository extends BaseRepository<Menu, Long> {
 
-    /**
-     * 查询菜单URL
-     * @param url id列表
-     */
-    public Menu findByUrl(String url);
-
 }

@@ -9,10 +9,4 @@ import com.ivo.modules.system.domain.User;
  */
 public interface UserRepository extends BaseRepository<User, String> {
 
-    /**
-     * 根据用户名查询用户数据
-     * @param username 用户名
-     * @return 用户数据
-     */
-    User findByUsername(String username);
 }

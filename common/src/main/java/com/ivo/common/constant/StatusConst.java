@@ -8,10 +8,14 @@ package com.ivo.common.constant;
  */
 public class StatusConst {
 
-    // 删除状态码
+    /**
+     * 删除状态码
+     */
     public static final byte DELETE = 0;
 
-    // 正常有效状态码
+    /**
+     * 正常有效状态码
+     */
     public static final byte VALID = 1;
 
 }

@@ -1,14 +1,13 @@
 package com.ivo.modules.system.service;
 
-import com.ivo.common.enums.StatusEnum;
 import com.ivo.modules.system.domain.Menu;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
+ * 菜单service
  * @Author: wj
  * @Date: 2019-06-04 16:39
  * @Version 1.0
@@ -16,21 +15,24 @@ import java.util.List;
 public interface MenuService {
 
     /**
-     * 获取菜单列表数据
+     * 根据菜单ID获取菜单数据
+     * @param id
+     * @return
+     */
+    Menu getMenuById(Long id);
+
+
+    /**
+     * 获取所有菜单
+     * @return
+     */
+    List<Menu> getAllMenu();
+
+    /**
+     * 根据查询实例获取菜单列表
      * @param example 查询实例
      * @param sort 排序对象
      */
-    List<Menu> getListByExample(Example<Menu> example, Sort sort);
-
-    /**
-     * 根据菜单ID查询菜单数据
-     * @param id 菜单ID
-     */
-    Menu getById(Long id);
-
-    /**
-     * 获取菜单列表数据
-     */
-    List<Menu> getListBySortOk();
+    List<Menu> getMenusByExample(Example<Menu> example, Sort sort);
 
 }

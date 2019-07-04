@@ -83,28 +83,33 @@ public interface Cost {
 
     /**
      * 计算预防成本
-     * @param phase
+     * @param phaseCostDetail 机种成本明细
+     * @param phase 阶段
      * @return
      */
     Double computePrecautionCost(PhaseCostDetail phaseCostDetail, String phase);
 
     /**
      * 计算鉴定成本
-     * @param phase
+     * @param phaseCostDetail 机种成本明细
+     * @param phase 阶段
      * @return
      */
     Double computeIdentifyCost(PhaseCostDetail phaseCostDetail, String phase);
 
+
     /**
      * 计算内损成本
-     * @param phase
+     * @param phaseCostDetail 机种成本明细
+     * @param phase 阶段
      * @return
      */
     Double computeInLossCost(PhaseCostDetail phaseCostDetail, String phase);
 
     /**
      * 计算外损成本
-     * @param phase
+     * @param phaseCostDetail 机种成本明细
+     * @param phase 阶段
      * @return
      */
     Double computeOutLossCost(PhaseCostDetail phaseCostDetail, String phase);
