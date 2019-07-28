@@ -5,6 +5,7 @@ import com.ivo.modules.system.domain.Role;
 import com.ivo.modules.system.domain.User;
 import com.ivo.modules.system.service.RoleService;
 import com.ivo.modules.system.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -14,7 +15,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
@@ -45,27 +45,27 @@ public class AuthRealm extends AuthorizingRealm {
         // 获取用户Principal对象
         User user = (User) principal.getPrimaryPrincipal();
 
-        // 管理员拥有所有权限
-        if(user.getId().equals(AdminConst.ADMIN_ID)){
+        // 如果是超级管理员的内置账号，拥有所有权限
+        if(user.getUserid().equals(AdminConst.ADMIN_ID)){
             info.addRole(AdminConst.ADMIN_ROLE_NAME);
-            info.addStringPermission("*:*:*");
+            info.addStringPermission(AdminConst.PERMISSION);
+            return info;
+
+        } else {
+            // 获取角色和资源
+            Set<Role> roleList = roleService.getUserOkRoleList(user.getUserid());
+            // 赋予角色和资源授权
+            roleList.forEach(role -> {
+                info.addRole(role.getName());
+                role.getMenus().forEach(menu -> {
+                    String perms = menu.getPerms();
+                    if(!StringUtils.isEmpty(perms) && !perms.contains("*")) {
+                        info.addStringPermission(perms);
+                    }
+                });
+            });
             return info;
         }
-
-        // 获取角色和资源
-        Set<Role> roleList = roleService.getUserOkRoleList(user.getId());
-        // 赋予角色和资源授权
-        roleList.forEach(role -> {
-            info.addRole(role.getName());
-            role.getMenus().forEach(menu -> {
-                String perms = menu.getPerms();
-                if(!StringUtils.isEmpty(perms) && !perms.contains("*")) {
-                    info.addStringPermission(perms);
-                }
-            });
-        });
-
-        return info;
     }
 
     /**
@@ -77,11 +77,22 @@ public class AuthRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        // 获取数据库中的用户名密码
-        User user = userService.getUserById(token.getUsername());
-        // 判断用户名是否存在
-        if(user == null){
-            throw new UnknownAccountException();
+
+        User user = null;
+        // 如果是超级管理员使用内置账号
+        if(StringUtils.equals(token.getUsername(), AdminConst.ADMIN_ID)) {
+            user = new User();
+            user.setUserid(AdminConst.ADMIN_ID);
+            user.setUsername(AdminConst.ADMIN_NAME);
+            user.setPassword(AdminConst.PASSWORD);
+            user.setSalt(AdminConst.SALT);
+        } else {
+            // 获取数据库中的用户名密码
+            user = userService.getUserById(token.getUsername());
+            // 判断用户名是否存在
+            if(user == null){
+                throw new UnknownAccountException();
+            }
         }
 
         // 对盐进行加密处理

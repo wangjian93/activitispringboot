@@ -1,33 +1,39 @@
 package com.ivo.modules.coq.domain;
 
-import lombok.Data;
+import com.ivo.common.constant.StatusConst;
+import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.system.model.Model;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 机种成本
+ * 机种的成本
  * @Author: wj
- * @Date: 2019-06-24 11:16
+ * @Date: 2019-07-25 09:16
  * @Version 1.0
  */
-@Data
-public class ProjectCost {
+@Getter
+@Setter
+@Entity
+@Table(name = "coq_projectCost")
+@SQLDelete(sql = "update coq_projectCost set valid_Flag=" + StatusConst.DELETE + " WHERE project=?")
+@Where(clause = StatusUtil.notDelete)
+public class ProjectCost extends Model {
 
-    /**
-     * 机种
-     */
+    @Id
     private String projectName;
 
-    /**
-     * 各阶段成本明细
-     */
-    private List<PhaseCostDetail> phaseCostDetails;
-
-    /**
-     * 成本的二级科目
-     */
-    private List<PhaseCost> phaseCosts;
-
+    @OneToMany
+    private List<ProjectStageCost> projectStageCosts = new ArrayList<>();
 
     /**
      * 必要花费
@@ -61,9 +67,9 @@ public class ProjectCost {
      */
     private Double outLossCost;
 
-    public ProjectCost(String projectName, List<PhaseCost> phaseCosts, List<PhaseCostDetail> phaseCostDetails) {
+    public ProjectCost() {}
+
+    public ProjectCost(String projectName) {
         this.projectName = projectName;
-        this.phaseCosts = phaseCosts;
-        this.phaseCostDetails = phaseCostDetails;
     }
 }

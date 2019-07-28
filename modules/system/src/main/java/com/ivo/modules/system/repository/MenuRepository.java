@@ -11,4 +11,11 @@ import java.util.List;
  */
 public interface MenuRepository extends BaseRepository<Menu, Long> {
 
+    /**
+     * 查询子菜单
+     * @param pid
+     * @return
+     */
+    List<Menu> findByPidOrderBySort(Long pid);
+
 }

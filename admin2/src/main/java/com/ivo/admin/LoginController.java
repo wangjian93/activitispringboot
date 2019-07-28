@@ -68,13 +68,13 @@ public class LoginController implements ErrorController {
             }
             subject.login(token);
 
-            log.error("用户" + username + "登录成功");
+            log.info("用户" + username + "登录成功");
             return ResultVoUtil.success("登录成功", new URL("/"));
         } catch (LockedAccountException e) {
-            log.error("用户" + username + "登录失败，该账号已被冻结");
+            log.info("用户" + username + "登录失败，该账号已被冻结");
             return ResultVoUtil.error("该账号已被冻结");
         } catch (AuthenticationException e) {
-            log.error("用户" + username + "登录失败，用户名或密码错误");
+            log.info("用户" + username + "登录失败，用户名或密码错误");
             return ResultVoUtil.error("用户名或密码错误");
         }
     }

@@ -7,9 +7,7 @@ import com.ivo.modules.system.repository.RoleRepository;
 import com.ivo.modules.system.repository.RoleUserRelationshipRepository;
 import com.ivo.modules.system.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -31,12 +29,62 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
     /**
-     * 获取用户的角色列表
-     * @param userId 用户ID
+     * 根据ID获取角色
+     * @param id
+     * @return
      */
     @Override
-    public Set<Role> getUserOkRoleList(String userId) {
-        List<RoleUserRelationship> roleUserList = relationshipRepository.findByUser_Id(userId);
+    public Role getRoleById(Long id) {
+        return roleRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * 获取所有角色
+     * @return
+     */
+    @Override
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
+    }
+
+    /**
+     * 分页获取角色
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public Page<Role> getPageRoles(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return roleRepository.findAll(pageable);
+    }
+
+    /**
+     * 保存Role
+     * @param role
+     * @return
+     */
+    @Override
+    public Role saveRole(Role role) {
+        return roleRepository.save(role);
+    }
+
+    /**
+     * 删除Role
+     * @param role
+     */
+    @Override
+    public void deleteRole(Role role) {
+        roleRepository.delete(role);
+    }
+
+    /**
+     * 获取用户的角色列表
+     * @param userid 用户ID
+     */
+    @Override
+    public Set<Role> getUserOkRoleList(String userid) {
+        List<RoleUserRelationship> roleUserList = relationshipRepository.findByUser_userid(userid);
         Set<Role> roleList = new HashSet<>();
         for(RoleUserRelationship roleUser : roleUserList) {
             Role role = roleUser.getRole();
@@ -49,7 +97,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean existsUserOk(String userId) {
+    public Boolean existsUserOk(String userid) {
         return null;
     }
 

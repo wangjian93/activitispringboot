@@ -20,6 +20,12 @@
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ivo.modules</groupId>
+            <artifactId>system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

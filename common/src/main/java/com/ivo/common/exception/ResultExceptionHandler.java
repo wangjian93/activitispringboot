@@ -45,6 +45,6 @@ public class ResultExceptionHandler {
         ResultExceptionAdvice resultExceptionAdvice = SpringContextUtil.getBean(ResultExceptionAdvice.class);
         resultExceptionAdvice.runtimeException(e);
         log.error("【系统异常】", e);
-        return ResultVoUtil.error(500, "未知错误：EX4399");
+        return ResultVoUtil.error(500, "未知错误：EX4399--" + e.getMessage());
     }
 }

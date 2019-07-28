@@ -3,6 +3,7 @@ package com.ivo.modules.system.enums;
 import lombok.Getter;
 
 /**
+ * 菜单类型枚举
  * @Author: wj
  * @Date: 2019-06-04 15:47
  * @Version 1.0
@@ -10,8 +11,9 @@ import lombok.Getter;
 @Getter
 public enum MenuTypeEnum {
 
+    BUTTON((byte)0, "按钮"),
     MENU((byte)1, "菜单"),
-    BUTTON((byte)2, "按钮"),
+
 
     ;
     private Byte code;

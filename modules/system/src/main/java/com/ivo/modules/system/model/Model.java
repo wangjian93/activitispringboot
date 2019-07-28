@@ -2,9 +2,13 @@ package com.ivo.modules.system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivo.modules.system.domain.User;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -17,40 +21,46 @@ import java.util.Date;
  * @Date: 2019-07-03 15:02
  * @Version 1.0
  */
-@Data
+@Setter
+@Getter
 @MappedSuperclass
 public class Model extends ModelAtom {
-
-    private static final long serialVersionUID = -2965197988263465285L;
 
     /**
      * 创建时间
      */
+    @JsonIgnore
+    @CreatedDate
     private Date createDate;
 
     /**
      * 创建者
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "creator")
     @JsonIgnore
+    @CreatedBy
     private User creator;
 
     /**
      *  修改时间
      */
+    @JsonIgnore
+    @LastModifiedDate
     private Date updateDate;
 
     /**
      * 修改者
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "updater")
     @JsonIgnore
+    @LastModifiedBy
     private User updater;
 
     /**
      * 备注
      */
+    @JsonIgnore
     private String remark;
 }

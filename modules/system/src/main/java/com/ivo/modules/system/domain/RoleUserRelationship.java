@@ -1,13 +1,15 @@
 package com.ivo.modules.system.domain;
 
-import com.ivo.common.enums.StatusEnum;
+import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.system.model.Model;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 
 /**
+ * 角色用户中间表
  * @Author: wj
  * @Date: 2019-06-04 16:48
  * @Version 1.0
@@ -15,7 +17,9 @@ import java.util.Date;
 @Entity
 @Table(name = "sys_user_role")
 @Data
-public class RoleUserRelationship implements Serializable {
+@SQLDelete(sql = "update sys_user_role" + StatusUtil.sliceDelete)
+@Where(clause = StatusUtil.notDelete)
+public class RoleUserRelationship extends Model {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +32,5 @@ public class RoleUserRelationship implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_fk")
     private User user;
-
-    private Date createDate;
-    private Date updateDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator")
-    private User creator;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater")
-    private User updater;
-
-    private Byte validFlag = StatusEnum.VALID.getCode();
 
 }

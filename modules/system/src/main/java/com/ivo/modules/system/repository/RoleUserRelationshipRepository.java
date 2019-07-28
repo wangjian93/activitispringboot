@@ -13,8 +13,8 @@ public interface RoleUserRelationshipRepository extends BaseRepository<RoleUserR
 
     /**
      * 根据user Id查询与role关联列表
-     * @param userId
+     * @param userid
      * @return
      */
-    List<RoleUserRelationship> findByUser_Id(String userId);
+    List<RoleUserRelationship> findByUser_userid(String userid);
 }

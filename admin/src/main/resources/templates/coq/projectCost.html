@@ -17,7 +17,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">机种</label>
                     <div class="layui-input-block">
-                        <input type="text" name="projectName" th:value="${projectCost.getProjectName()}" placeholder="请输入机种" autocomplete="off" class="layui-input">
+                        <input type="text" name="projectName" th:value="${projectCost3.getProjectName()}" placeholder="请输入机种" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
@@ -42,7 +42,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="phaseCost:${projectCost.getPhaseCosts()}">
+                <tr th:each="phaseCost:${projectCost3.getPhaseCosts()}">
                     <td th:text="${phaseCost.getPhase()}">阶段</td>
                     <td th:text="${phaseCost.getPrecautionCost()}">预防成本</td>
                     <td th:text="${phaseCost.getIdentifyCost()}">鉴定成本</td>
@@ -68,7 +68,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="phaseCostDetail:${projectCost.getPhaseCostDetails()}">
+                <tr th:each="phaseCostDetail:${projectCost3.getPhaseCostDetails()}">
                     <td th:text="${phaseCostDetail.getPhase()}">阶段</td>
                     <td th:text="${phaseCostDetail.getDirectMaterialCost()}">直接材料成本</td>
                     <td th:text="${phaseCostDetail.getToolCost()}">治工具</td>

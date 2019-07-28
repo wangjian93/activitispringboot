@@ -1,15 +1,15 @@
 package com.ivo.modules.system.domain;
 
-import com.ivo.common.enums.StatusEnum;
-import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.system.model.Model;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -19,45 +19,40 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "sys_role")
-@Data
-public class Role implements Serializable {
+@Setter
+@Getter
+@SQLDelete(sql = "update sys_role" + StatusUtil.sliceDelete)
+@Where(clause = StatusUtil.notDelete)
+public class Role extends Model {
 
+    private static final long serialVersionUID = 2337940886727405792L;
+
+    /**
+     * ID
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * 角色名
+     */
     private String name;
+
+    /**
+     * 名称
+     */
     private String title;
-    private String remark;
 
-    private Date createDate;
-    private Date updateDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator")
-    private User creator;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updater")
-    private User updater;
-
-    private Byte validFlag = StatusEnum.VALID.getCode();
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    /**
+     * 角色拥有的菜单资源
+     */
+    @ManyToMany
     @JoinTable(name = "sys_role_menu",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "menu_id"))
+    @JsonIgnoreProperties(value = {"roles"})
     private Set<Menu> menus = new HashSet<>(0);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return Objects.equals(id, role.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

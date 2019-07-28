@@ -3,12 +3,12 @@ package com.ivo.test.modules.system;
 import com.ivo.AbstractTest;
 import com.ivo.modules.system.domain.Role;
 import com.ivo.modules.system.service.RoleService;
-import org.apache.shiro.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @Author: wj
@@ -16,6 +16,7 @@ import java.util.Set;
  * @Version 1.0
  */
 @Transactional
+@Slf4j
 public class RoleServiceTest extends AbstractTest {
 
     @Autowired
@@ -23,7 +24,6 @@ public class RoleServiceTest extends AbstractTest {
 
     @Test
     public void test() {
-        Set<Role> roles = roleService.getUserOkRoleList("a");
-        Assert.notEmpty(roles);
+        List<Role> roleList = roleService.getAllRoles();
     }
 }

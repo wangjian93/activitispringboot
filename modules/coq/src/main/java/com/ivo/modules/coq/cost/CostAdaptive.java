@@ -15,15 +15,15 @@ import java.util.Map;
  */
 public class CostAdaptive {
 
-    private static Map<String, Cost> map;
+    private static Map<String, StageCostFormula> map;
 
     static {
         map = new HashMap<>();
-        map.put(PhaseEnum.NPRB.getPhase(), new NprbCost());
-        map.put(PhaseEnum.Design.getPhase(), new DesignCost());
-        map.put(PhaseEnum.EVT.getPhase(), new EvtCost());
-        map.put(PhaseEnum.DVT.getPhase(), new DvtCost());
-        map.put(PhaseEnum.PVT.getPhase(), new PvtCost());
+        map.put(PhaseEnum.NPRB.getPhase(), new NprbStageCostFormulaImpl());
+        map.put(PhaseEnum.Design.getPhase(), new DesignStageCostFormulaImpl());
+        map.put(PhaseEnum.EVT.getPhase(), new EvtStageCostFormulaImpl());
+        map.put(PhaseEnum.DVT.getPhase(), new DvtStageCostFormulaImpl());
+        map.put(PhaseEnum.PVT.getPhase(), new PvtStageCostFormulaImpl());
     }
 
     /**
@@ -31,7 +31,7 @@ public class CostAdaptive {
      * @param phase
      * @return
      */
-    public static Cost getCost(String phase) {
+    public static StageCostFormula getCost(String phase) {
         return costAdaptive(phase);
     }
 
@@ -39,7 +39,7 @@ public class CostAdaptive {
      * 根据机种阶段进行适配
      * @return
      */
-    private static Cost costAdaptive(String phase) {
+    private static StageCostFormula costAdaptive(String phase) {
         // 阶段截取掉"-"及后内容
         phase = StringUtils.substringBefore(phase, "-");
         return map.get(phase);

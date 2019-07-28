@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 角色Service
  * @Author: wj
  * @Date: 2019-06-04 16:21
  * @Version 1.0
@@ -17,19 +18,47 @@ import java.util.Set;
 public interface RoleService {
 
     /**
-     * 获取用户角色列表
-     * @param userId 用户ID
+     * 根据ID获取角色
+     * @param id
+     * @return
      */
-    Set<Role> getUserOkRoleList(String userId);
+    Role getRoleById(Long id);
 
     /**
-     * 判断指定的用户是否存在角色
-     * @param userId 用户ID
+     * 获取所有角色
+     * @return
      */
-    Boolean existsUserOk(String userId);
+    List<Role> getAllRoles();
 
     /**
-     * 根据角色ID查询角色数据
+     * 分页获取角色
+     * @param page
+     * @param size
+     * @return
+     */
+    Page<Role> getPageRoles(int page, int size);
+
+    /**
+     * 保存Role
+     * @param role
+     * @return
+     */
+    Role saveRole(Role role);
+
+
+    /**
+     * 删除Role
+     * @param role
+     */
+    void deleteRole(Role role);
+
+
+
+
+
+
+    /**
+     * 根据ID获取角色数据
      * @param id 角色ID
      */
     Role getById(Long id);
@@ -40,6 +69,20 @@ public interface RoleService {
      * @return 返回分页数据
      */
     Page<Role> getPageList(Example<Role> example);
+
+
+    /**
+     * 获取用户角色列表
+     * @param userid 用户ID
+     */
+    Set<Role> getUserOkRoleList(String userid);
+
+    /**
+     * 判断指定的用户是否存在角色
+     * @param userid 用户ID
+     */
+    Boolean existsUserOk(String userid);
+
 
     /**
      * 获取角色列表数据

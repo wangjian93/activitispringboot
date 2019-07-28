@@ -1,8 +1,11 @@
 package com.ivo.modules.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.system.enums.MenuTypeEnum;
 import com.ivo.modules.system.model.Model;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -15,20 +18,20 @@ import java.util.*;
  * @Date: 2019-06-04 15:31
  * @Version 1.0
  */
-@Data
 @Entity
 @Table(name = "sys_menu")
+@Setter
+@Getter
 @SQLDelete(sql = "update sys_menu" + StatusUtil.sliceDelete)
 @Where(clause = StatusUtil.notDelete)
 public class Menu extends Model  {
 
-    private static final long serialVersionUID = -7126363428726334075L;
+    private static final long serialVersionUID = -6571323410341791753L;
 
     /**
      * ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -64,7 +67,7 @@ public class Menu extends Model  {
     /**
      * 类型
      */
-    private Byte type;
+    private Byte type = MenuTypeEnum.MENU.getCode();
 
     /**
      * 排序
@@ -75,6 +78,7 @@ public class Menu extends Model  {
      * 所属角色
      */
     @ManyToMany(mappedBy = "menus")
+    @JsonIgnoreProperties(value = {"menus"})
     private Set<Role> roles = new HashSet<>(0);
 
     @Transient

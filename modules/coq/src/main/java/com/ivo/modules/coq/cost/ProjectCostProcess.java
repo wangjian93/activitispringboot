@@ -1,6 +1,6 @@
 package com.ivo.modules.coq.cost;
 
-import com.ivo.modules.coq.domain.ProjectCost;
+import com.ivo.modules.coq.domain.ProjectCost3;
 
 /**
  * 处理ProjectCost的数据
@@ -12,9 +12,9 @@ public interface ProjectCostProcess extends PhaseCostProcess, PhaseCostDetailPro
 
     /**
      * 计算机种的成本（预防成本，鉴定成本，内损成本，外损成本，必要花费，多余花费）
-     * @param projectCost
+     * @param projectCost3
      * @return
      */
-    void computeProjectCost(ProjectCost projectCost);
+    void computeProjectCost(ProjectCost3 projectCost3);
 
 }

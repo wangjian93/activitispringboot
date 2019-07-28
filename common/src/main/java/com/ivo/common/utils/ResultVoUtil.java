@@ -93,7 +93,7 @@ public class ResultVoUtil {
      * 操作有误，使用默认400错误码，使用默认的提示信息
      * @return
      */
-    public static ResultVo erro() {
+    public static ResultVo error() {
         String msg = ResultEnum.ERROR.getMessage();
         return error(msg);
     }

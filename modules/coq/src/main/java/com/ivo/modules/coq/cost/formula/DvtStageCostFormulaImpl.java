@@ -1,7 +1,7 @@
 package com.ivo.modules.coq.cost.formula;
 
 import com.ivo.modules.coq.cost.DoubleUtil;
-import com.ivo.modules.coq.domain.PhaseCostDetail;
+import com.ivo.modules.coq.domain.ProjectStageCost;
 
 /**
  * 获取Dvt阶段的成本数据
@@ -9,7 +9,7 @@ import com.ivo.modules.coq.domain.PhaseCostDetail;
  * @Date: 2019-06-24 14:45
  * @Version 1.0
  */
-public class DvtCost implements Cost {
+public class DvtStageCostFormulaImpl implements StageCostFormula {
 
     /**
      * DVT阶段直接材料成本接口
@@ -18,7 +18,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getDirectMaterialCost(String projectName, String phase) {
+    public Double getDirectMaterialCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //Todo... DVT阶段直接材料成本接口
         Double directMaterialCost;
         switch (phase) {
@@ -40,7 +40,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getToolCost(String projectName, String phase) {
+    public Double getToolCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //Todo... DVT阶段治工具成本接口
         Double toolCost;
         switch (phase) {
@@ -58,7 +58,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getValidationCost(String projectName, String phase) {
+    public Double getValidationCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //Todo... DVT阶段验证费用成本接口
         Double validationCost;
         switch (phase) {
@@ -80,7 +80,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getProductionCost(String projectName, String phase) {
+    public Double getProductionCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //Todo... DVT阶段生产费用成本接口
         Double productionCost;
         switch (phase) {
@@ -102,7 +102,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getReworkAndScrapCost(String projectName, String phase) {
+    public Double getReworkAndScrapCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... DVT阶段重工报废费用成本接口
         Double reworkAndScrapCos;
         switch (phase) {
@@ -124,7 +124,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getSalaryCost(String projectName, String phase) {
+    public Double getSalaryCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... DVT阶段研发人员薪资成本接口
         return null;
     }
@@ -136,7 +136,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getRmaCost(String projectName, String phase) {
+    public Double getRmaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... DVT阶段RMA成本接口
         return null;
     }
@@ -148,7 +148,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getObaCost(String projectName, String phase) {
+    public Double getObaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... DVT阶段OBA成本接口
         return null;
     }
@@ -160,7 +160,7 @@ public class DvtCost implements Cost {
      * @return
      */
     @Override
-    public Double getTravelCost(String projectName, String phase) {
+    public Double getTravelCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... DVT阶段差旅费成本接口
         return 0D;
     }
@@ -168,20 +168,19 @@ public class DvtCost implements Cost {
     /**
      * DVT阶段预防成本计算
      * 预防成本 （DVT-1 : 直接材料成本 + 治工具成本 + 生产费用成本）
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computePrecautionCost(PhaseCostDetail phaseCostDetail,  String phase) {
+    public Double computePrecautionCost(ProjectStageCost projectStageCost) {
         //TODO... DVT阶段预防成本计算
         // 预防成本 （DVT-1: 直接材料成本 + 治工具成本 + 生产费用成本)
         Double precautionCost;
-        switch (phase) {
+        switch (projectStageCost.getStage()) {
             case "DVT-1" :
-                Double directMaterialCost = phaseCostDetail.getDirectMaterialCost();
-                Double toolCost = phaseCostDetail.getToolCost();
-                Double productionCost = phaseCostDetail.getProductionCost();
+                Double directMaterialCost = projectStageCost.getDirectMaterialCost();
+                Double toolCost = projectStageCost.getToolCost();
+                Double productionCost = projectStageCost.getProductionCost();
                 precautionCost = DoubleUtil.sum(directMaterialCost, toolCost, productionCost);
                 break;
             default: precautionCost = null;
@@ -193,18 +192,17 @@ public class DvtCost implements Cost {
     /**
      * DVT阶段鉴定成本计算
      * 鉴定成本 （DVT-1: 验证费用）
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeIdentifyCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeIdentifyCost(ProjectStageCost projectStageCost) {
         //TODO... DVT阶段鉴定成本计算
         // 鉴定成本 （DVT-1: 验证费用）
         Double identifyCost;
-        switch (phase) {
+        switch (projectStageCost.getStage()) {
             case "DVT-1" :
-                Double validationCost = phaseCostDetail.getValidationCost();
+                Double validationCost = projectStageCost.getValidationCost();
                 identifyCost = validationCost;
                 break;
             default: identifyCost = null;
@@ -217,29 +215,28 @@ public class DvtCost implements Cost {
      * DVT阶段内损成本计算
      * 内损成本 （DVT-1: 重工报废费用 + 差旅费;
      * DVT-2,DVT-3,DVT-4,DVT-5,DVT-6: 直接材料成本 + 治工具成本 + 验证费用 + 生产费用 + 重工报废费用 + 差旅费）
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeInLossCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeInLossCost(ProjectStageCost projectStageCost) {
         //TODO... DVT阶段内损成本计算
         // 内损成本 （DVT-1: 重工报废费用 + 差旅费;
         // DVT-2,DVT-3,DVT-4,DVT-5,DVT-6: 直接材料成本 + 治工具成本 + 验证费用 + 生产费用 + 重工报废费用 + 差旅费）
         Double inLossCost;
-        switch(phase) {
+        switch(projectStageCost.getStage()) {
             case "DVT-1" :
-                Double reworkAndScrapCost = phaseCostDetail.getReworkAndScrapCost();
-                Double travelCost = phaseCostDetail.getTravelCost();
+                Double reworkAndScrapCost = projectStageCost.getReworkAndScrapCost();
+                Double travelCost = projectStageCost.getTravelCost();
                 inLossCost = DoubleUtil.sum(reworkAndScrapCost, travelCost);
                 break;
             case "DVT-2" : case "DVT-3" : case "DVT-4" : case "DVT-5" : case "DVT-6" :
-                Double directMaterialCost = phaseCostDetail.getDirectMaterialCost();
-                Double toolCost = phaseCostDetail.getToolCost();
-                Double validationCost = phaseCostDetail.getValidationCost();
-                Double productionCost = phaseCostDetail.getProductionCost();
-                Double reworkAndScrapCost1 = phaseCostDetail.getReworkAndScrapCost();
-                Double travelCost1 = phaseCostDetail.getTravelCost();
+                Double directMaterialCost = projectStageCost.getDirectMaterialCost();
+                Double toolCost = projectStageCost.getToolCost();
+                Double validationCost = projectStageCost.getValidationCost();
+                Double productionCost = projectStageCost.getProductionCost();
+                Double reworkAndScrapCost1 = projectStageCost.getReworkAndScrapCost();
+                Double travelCost1 = projectStageCost.getTravelCost();
                 inLossCost = DoubleUtil.sum(directMaterialCost, toolCost, validationCost, productionCost,
                         reworkAndScrapCost1, travelCost1);
                 break;
@@ -250,12 +247,11 @@ public class DvtCost implements Cost {
 
     /**
      * DVT阶段外损成本计算
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeOutLossCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeOutLossCost(ProjectStageCost projectStageCost) {
         //TODO... DVT阶段外损成本计算
         return null;
     }

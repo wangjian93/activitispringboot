@@ -41,7 +41,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
-     * 根据查询实例获取菜单列表
+     * 根据查询实例获取菜单
      * @param example 查询实例
      * @param sort 排序对象
      * @return
@@ -49,5 +49,34 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<Menu> getMenusByExample(Example<Menu> example, Sort sort) {
         return menuRepository.findAll(example, sort);
+    }
+
+    /**
+     * 保存菜单
+     * @param menu
+     * @return
+     */
+    @Override
+    public Menu saveMenu(Menu menu) {
+        return menuRepository.save(menu);
+    }
+
+    /**
+     * 删除菜单
+     * @param menu
+     */
+    @Override
+    public void deleteMenu(Menu menu) {
+        menuRepository.delete(menu);
+    }
+
+    /**
+     * 获取菜单的子菜单
+     * @param pid
+     * @return
+     */
+    @Override
+    public List<Menu> getChildMenuByPid(Long pid) {
+        return menuRepository.findByPidOrderBySort(pid);
     }
 }

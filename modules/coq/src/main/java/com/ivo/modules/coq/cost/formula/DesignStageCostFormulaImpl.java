@@ -1,9 +1,7 @@
 package com.ivo.modules.coq.cost.formula;
 
 import com.ivo.modules.coq.cost.DoubleUtil;
-import com.ivo.modules.coq.domain.PhaseCostDetail;
-
-import java.math.BigDecimal;
+import com.ivo.modules.coq.domain.ProjectStageCost;
 
 /**
  * 获取Design阶段的成本数据
@@ -11,7 +9,7 @@ import java.math.BigDecimal;
  * @Date: 2019-06-24 14:42
  * @Version 1.0
  */
-public class DesignCost implements Cost {
+public class DesignStageCostFormulaImpl implements StageCostFormula {
 
     /**
      * Design阶段直接材料成本接口
@@ -20,7 +18,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getDirectMaterialCost(String projectName, String phase) {
+    public Double getDirectMaterialCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段直接材料成本接口
         return null;
     }
@@ -32,7 +30,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getToolCost(String projectName, String phase) {
+    public Double getToolCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段治工具成本接口
         return 961200.00;
     }
@@ -44,7 +42,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getValidationCost(String projectName, String phase) {
+    public Double getValidationCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段验证费用成本接口
         return 9986.30;
     }
@@ -56,7 +54,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getProductionCost(String projectName, String phase) {
+    public Double getProductionCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段生产费用成本接口
         return null;
     }
@@ -68,7 +66,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getReworkAndScrapCost(String projectName, String phase) {
+    public Double getReworkAndScrapCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         // TODO... Design阶段重工报废费用成本接口
         return null;
     }
@@ -80,7 +78,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getSalaryCost(String projectName, String phase) {
+    public Double getSalaryCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段研发人员薪资成本接口
         return 17068.97;
     }
@@ -92,7 +90,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getRmaCost(String projectName, String phase) {
+    public Double getRmaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段RMA成本接口
         return null;
     }
@@ -104,7 +102,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getObaCost(String projectName, String phase) {
+    public Double getObaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段OBA成本接口
         return null;
     }
@@ -116,7 +114,7 @@ public class DesignCost implements Cost {
      * @return
      */
     @Override
-    public Double getTravelCost(String projectName, String phase) {
+    public Double getTravelCost(String projectName, String phase, ProjectStageCost projectStageCost) {
         //TODO... Design阶段差旅费成本接口
         return null;
     }
@@ -124,16 +122,15 @@ public class DesignCost implements Cost {
     /**
      * Design阶段预防成本计算
      * 预防成本 （治具工具成本 + 研发人员薪资成本）
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computePrecautionCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computePrecautionCost(ProjectStageCost projectStageCost) {
         //TODO... Design阶段预防成本计算
         // 预防成本 （治具工具成本 + 研发人员薪资成本）
-        Double toolCost = phaseCostDetail.getToolCost();
-        Double salaryCost = phaseCostDetail.getSalaryCost();
+        Double toolCost = projectStageCost.getToolCost();
+        Double salaryCost = projectStageCost.getSalaryCost();
 
         return DoubleUtil.sum(toolCost, salaryCost);
     }
@@ -141,15 +138,14 @@ public class DesignCost implements Cost {
     /**
      * Design阶段鉴定成本计算
      * 鉴定成本 (验证费用成本)
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeIdentifyCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeIdentifyCost(ProjectStageCost projectStageCost) {
         //TODO... Design阶段鉴定成本计算
         // 鉴定成本 (验证费用成本)
-        Double validationCost = phaseCostDetail.getValidationCost();
+        Double validationCost = projectStageCost.getValidationCost();
 
         return DoubleUtil.sum(validationCost);
     }
@@ -157,25 +153,23 @@ public class DesignCost implements Cost {
     /**
      * Design阶段内损成本计算
      * 内损成本 (差旅费成本)
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeInLossCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeInLossCost(ProjectStageCost projectStageCost) {
         //TODO... Design阶段内损成本计算
         // 内损成本 (差旅费成本)
-        return phaseCostDetail.getTravelCost();
+        return projectStageCost.getTravelCost();
     }
 
     /**
      * Design阶段外损成本计算
-     * @param phaseCostDetail 机种成本明细
-     * @param phase 阶段
+     * @param projectStageCost
      * @return
      */
     @Override
-    public Double computeOutLossCost(PhaseCostDetail phaseCostDetail, String phase) {
+    public Double computeOutLossCost(ProjectStageCost projectStageCost) {
         //TODO... Design阶段外损成本计算
         return null;
     }

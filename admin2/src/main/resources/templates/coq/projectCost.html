@@ -42,6 +42,9 @@
                             <thead>
                             <tr>
                                 <th>阶段</th>
+                                <th>Process</th>
+                                <th>数量</th>
+                                <th>单位</th>
                                 <th>直接材料成本</th>
                                 <th>治工具</th>
                                 <th>验证费用</th>
@@ -54,18 +57,45 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="phaseCostDetail:${projectCost.getPhaseCostDetails()}">
-                                <td th:text="${phaseCostDetail.getPhase()}">阶段</td>
-                                <td th:text="${phaseCostDetail.getDirectMaterialCost()}">直接材料成本</td>
-                                <td th:text="${phaseCostDetail.getToolCost()}">治工具</td>
-                                <td th:text="${phaseCostDetail.getValidationCost()}">验证费用</td>
-                                <td th:text="${phaseCostDetail.getProductionCost()}">生产费用</td>
-                                <td th:text="${phaseCostDetail.getReworkAndScrapCost()}">重工/报废费用</td>
-                                <td th:text="${phaseCostDetail.getSalaryCost()}">研发人员薪资</td>
-                                <td th:text="${phaseCostDetail.getRmaCost()}">RMA</td>
-                                <td th:text="${phaseCostDetail.getObaCost()}">OBA</td>
-                                <td th:text="${phaseCostDetail.getTravelCost()}">差旅费</td>
-                            </tr>
+
+                            <th:block th:each="projectStageCost:${projectCost.getProjectStageCosts()}">
+                                <tr >
+                                    <td th:text="${projectStageCost.getStage()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">阶段</td>
+
+                                    <td th:text="${projectStageCost.getStageDetails().get(0).getProcess()}">Process</td>
+                                    <td th:text="${projectStageCost.getStageDetails().get(0).getOutQuantity()}">数量</td>
+                                    <td th:text="${projectStageCost.getStageDetails().get(0).getUnits()}">单位</td>
+
+                                    <td th:text="${projectStageCost.getDirectMaterialCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">直接材料成本</td>
+                                    <td th:text="${projectStageCost.getToolCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">治工具</td>
+                                    <td th:text="${projectStageCost.getValidationCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">验证费用</td>
+                                    <td th:text="${projectStageCost.getProductionCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">生产费用</td>
+                                    <td th:text="${projectStageCost.getReworkAndScrapCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">重工/报废费用</td>
+                                    <td th:text="${projectStageCost.getSalaryCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">研发人员薪资</td>
+                                    <td th:text="${projectStageCost.getRmaCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">RMA</td>
+                                    <td th:text="${projectStageCost.getObaCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">OBA</td>
+                                    <td th:text="${projectStageCost.getTravelCost()}"
+                                        th:attr="rowspan=${projectStageCost.getStageDetails().size()}">差旅费</td>
+                                </tr>
+
+                                <th:block th:each="stageDetails,index:${projectStageCost.getStageDetails()}">
+                                    <tr th:if="${index != 0}">
+                                        <td th:text="${stageDetails.getProcess()}">Process</td>
+                                        <td th:text="${stageDetails.getOutQuantity()}">数量</td>
+                                        <td th:text="${stageDetails.getUnits()}">单位</td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+
                             </tbody>
                         </table>
                     </div>
@@ -87,12 +117,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="phaseCost:${projectCost.getPhaseCosts()}">
-                                        <td th:text="${phaseCost.getPhase()}">阶段</td>
-                                        <td th:text="${phaseCost.getPrecautionCost()}">预防成本</td>
-                                        <td th:text="${phaseCost.getIdentifyCost()}">鉴定成本</td>
-                                        <td th:text="${phaseCost.getInLossCost()}">内损成本</td>
-                                        <td th:text="${phaseCost.getOutLossCost()}">外损成本</td>
+                                    <tr th:each="subject:${secondSubject}">
+                                        <td th:text="${subject.get('stage')}">阶段</td>
+                                        <td th:text="${subject.get('precautionCost')}">预防成本</td>
+                                        <td th:text="${subject.get('identifyCost')}">鉴定成本</td>
+                                        <td th:text="${subject.get('inLossCost')}">内损成本</td>
+                                        <td th:text="${subject.get('outLossCost')}">外损成本</td>
                                     </tr>
                                     </tbody>
                                 </table>

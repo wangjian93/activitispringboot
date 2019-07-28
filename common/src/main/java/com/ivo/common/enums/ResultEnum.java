@@ -25,6 +25,13 @@ public enum ResultEnum implements ResultInterface {
     USER_NAME_PWD_NULL(405, "用户名和密码不能为空"),
     USER_CAPTCHA_ERROR(406, "验证码错误"),
 
+
+
+    USER_NOTEXIST(401, "用户不存在"),
+    ROLE_NOTEXIST(401, "角色不存在"),
+    MENU_NOTEXIST(401, "菜单不存在"),
+
+
     /**
      * 非法操作
      */

@@ -47,11 +47,11 @@ public class MainController {
 
         // 管理员实时更新菜单
         // 其他用户需从相应的角色中获取菜单资源
-        if(user.getId().equals(AdminConst.ADMIN_ID)){
+        if(user.getUserid().equals(AdminConst.ADMIN_ID)){
             List<Menu> menus = menuService.getAllMenu();
             menus.forEach(menu -> keyMenu.put(menu.getId(), menu));
         }else {
-            Set<Role> roleList = roleService.getUserOkRoleList(user.getId());
+            Set<Role> roleList = roleService.getUserOkRoleList(user.getUserid());
             roleList.forEach(role -> {
                 role.getMenus().forEach(menu -> {
                     keyMenu.put(menu.getId(), menu);

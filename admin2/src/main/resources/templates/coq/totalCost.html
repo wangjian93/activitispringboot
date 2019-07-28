@@ -75,6 +75,13 @@
 
 <script th:inline="javascript">
     var message = [[${projectCosts}]];
+
+    var projects;
+    for(var i=0; i<message.length; i++) {
+        var obj = message[i];
+        projects.push[i]
+    }
+
     console.log(message);
 </script>
 

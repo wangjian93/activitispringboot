@@ -35,4 +35,20 @@ public interface MenuService {
      */
     List<Menu> getMenusByExample(Example<Menu> example, Sort sort);
 
+    /**
+     * 保存Menu
+     * @param menu
+     * @return
+     */
+    Menu saveMenu(Menu menu);
+
+    void deleteMenu(Menu menu);
+
+    /**
+     * 获取菜单下的子菜单
+     * @param pid
+     * @return
+     */
+    List<Menu> getChildMenuByPid(Long pid);
+
 }

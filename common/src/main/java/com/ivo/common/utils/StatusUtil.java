@@ -18,10 +18,12 @@ public class StatusUtil {
      */
     public static final String sliceDelete = " set valid_Flag=" + StatusConst.DELETE + " WHERE id=?";
 
+    public static final String sliceDeleteForUser = " set valid_Flag=" + StatusConst.DELETE + " WHERE userid=?";
+
     /**
      * 不等于逻辑删除条件语句
      */
-    public static final String notDelete = "valid_Flag != " + StatusConst.DELETE;
+    public static final String notDelete = " valid_Flag != " + StatusConst.DELETE;
 
     /**
      * 获取状态StatusEnum对象

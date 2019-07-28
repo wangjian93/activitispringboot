@@ -1,7 +1,9 @@
 package com.ivo.modules.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivo.common.enums.StatusEnum;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
@@ -13,7 +15,8 @@ import java.io.Serializable;
  * @Date: 2019-07-03 14:50
  * @Version 1.0
  */
-@Data
+@Setter
+@Getter
 @MappedSuperclass
 public class ModelAtom implements Serializable {
 
@@ -22,6 +25,7 @@ public class ModelAtom implements Serializable {
     /**
      * 逻辑删除标识
      */
+    @JsonIgnore
     private Byte validFlag = StatusEnum.VALID.getCode();
 
     public ModelAtom() {
