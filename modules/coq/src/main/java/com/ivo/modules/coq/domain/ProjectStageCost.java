@@ -40,7 +40,7 @@ public class ProjectStageCost extends Model {
      */
     private String stage;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectStageCost", cascade = CascadeType.ALL)
     private List<StageDetail> stageDetails = new ArrayList<>();
 
     /**

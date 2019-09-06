@@ -17,6 +17,7 @@
         <module>system</module>
         <module>hr</module>
         <module>coq</module>
+        <module>coq_oracle</module>
     </modules>
 
 

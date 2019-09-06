@@ -2,16 +2,15 @@ package com.ivo.modules.coq.domain;
 
 import com.ivo.common.constant.StatusConst;
 import com.ivo.common.utils.StatusUtil;
+import com.ivo.modules.coq.cost.AmountFormatUtils;
 import com.ivo.modules.system.model.Model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class ProjectCost extends Model {
     @Id
     private String projectName;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectCost", cascade = CascadeType.ALL)
     private List<ProjectStageCost> projectStageCosts = new ArrayList<>();
 
     /**
@@ -71,5 +70,14 @@ public class ProjectCost extends Model {
 
     public ProjectCost(String projectName) {
         this.projectName = projectName;
+    }
+
+    /**
+     * 格式化数字为千分位显示；
+     * @param d 要格式化的数字
+     * @return
+     */
+    public String fmtMicrometer(Double d) {
+        return new AmountFormatUtils().fmtThousands(d);
     }
 }

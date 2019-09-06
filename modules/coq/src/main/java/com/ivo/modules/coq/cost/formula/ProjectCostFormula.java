@@ -11,44 +11,44 @@ import com.ivo.modules.coq.domain.ProjectCost;
 public interface ProjectCostFormula {
 
     /**
-     * 计算必要花费
+     * 汇总必要花费
      * @param projectCost
      * @return
      */
-    Double computeNecessaryCost(ProjectCost projectCost);
+    Double summaryNecessaryCost(ProjectCost projectCost);
 
     /**
-     * 计算多余花费
+     * 汇总多余花费
      * @param projectCost
      * @return
      */
-    Double computeUnnecessaryCost(ProjectCost projectCost);
+    Double summaryUnnecessaryCost(ProjectCost projectCost);
 
     /**
-     * 计算预防成本
+     * 汇总预防成本
      * @param projectCost
      * @return
      */
-    Double computePrecautionCost(ProjectCost projectCost);
+    Double summaryPrecautionCost(ProjectCost projectCost);
 
     /**
-     * 计算鉴定成本
+     * 汇总鉴定成本
      * @param projectCost
      * @return
      */
-    Double computeIdentifyCost(ProjectCost projectCost);
+    Double summaryIdentifyCost(ProjectCost projectCost);
 
     /**
-     * 计算内损成本
+     * 汇总内损成本
      * @param projectCost
      * @return
      */
-    Double computeInLossCost(ProjectCost projectCost);
+    Double summaryInLossCost(ProjectCost projectCost);
 
     /**
-     * 计算外损成本
+     * 汇总外损成本
      * @param projectCost
      * @return
      */
-    Double computeOutLossCost(ProjectCost projectCost);
+    Double summaryOutLossCost(ProjectCost projectCost);
 }

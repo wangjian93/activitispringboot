@@ -2,13 +2,13 @@ package com.ivo.modules.coq.service.impl;
 
 import com.ivo.common.enums.StatusEnum;
 import com.ivo.modules.coq.cost.formula.CostService;
-import com.ivo.modules.coq.cost.formula.ProjectCostFormula;
-import com.ivo.modules.coq.cost.formula.StageCostFormula;
 import com.ivo.modules.coq.domain.*;
+import com.ivo.modules.coq.enums.StageTypeEnum;
 import com.ivo.modules.coq.repository.ProjectCostRepository;
 import com.ivo.modules.coq.rest.RestService;
 import com.ivo.modules.coq.service.ProjectCostService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,13 +41,13 @@ public class ProjectCostServiceImpl implements ProjectCostService {
      */
     @Override
     public ProjectCost getProjectCost(String projectName) {
+        log.info("获取机种[" + projectName + "]的成本数据");
         ProjectCost projectCost = repository.findDistinctByProjectName(projectName);
 
-        // 生成或更新
+        // 不存在时生成
         if(projectCost == null) {
+            log.info("机种[" + projectName + "]的成本数据系统不能存在开始生成");
             projectCost = generateProjectCost(projectName);
-        } else {
-            projectCost = updateProjectCost(projectName);
         }
         return projectCost;
     }
@@ -59,8 +59,10 @@ public class ProjectCostServiceImpl implements ProjectCostService {
      */
     @Override
     public ProjectCost generateProjectCost(String projectName) {
+        log.info("生成机种[" + projectName + "]的成本数据 start...");
         ProjectCost projectCost = new ProjectCost(projectName);
         generateOrUpdateProjectCost(projectCost);
+        log.info("生成机种[" + projectName + "]的成本数据成功 end.");
         return projectCost;
     }
 
@@ -71,8 +73,10 @@ public class ProjectCostServiceImpl implements ProjectCostService {
      */
     @Override
     public ProjectCost updateProjectCost(String projectName) {
+        log.info("更新机种[" + projectName + "]的成本数据 start...");
         ProjectCost projectCost = repository.findDistinctByProjectName(projectName);
         generateOrUpdateProjectCost(projectCost);
+        log.info("更新机种[" + projectName + "]的成本数据成功 end");
         return projectCost;
     }
 
@@ -82,7 +86,7 @@ public class ProjectCostServiceImpl implements ProjectCostService {
      */
     @Override
     public void saveProjectCost(ProjectCost projectCost) {
-//        repository.save(projectCost);
+        repository.save(projectCost);
     }
 
     /**
@@ -93,15 +97,39 @@ public class ProjectCostServiceImpl implements ProjectCostService {
     @Override
     public void generateOrUpdateProjectCost(ProjectCost projectCost) {
         //生成或更新阶段信息
+        log.info("--1.获取机种[" + projectCost.getProjectName() + "]的阶段信息");
         setStage(projectCost);
 
         //生成或更新阶段的成本信息
+        log.info("--2.计算机种[" + projectCost.getProjectName() + "]各个阶段的成本");
         setStageCost(projectCost);
 
         //生成或更新机种的成本信息，汇总的数据
+        log.info("--3.计算机种[" + projectCost.getProjectName() + "]的成本汇总");
         setProjectCost(projectCost);
 
+        //对机种的阶段先后顺序进行排序
+        projectCost.getProjectStageCosts().sort((ProjectStageCost o1, ProjectStageCost o2) -> {
+            // 阶段截取掉"-"及后内容
+            String stage1 = StringUtils.substringBefore(o1.getStage(), "-");
+            String stage2 = StringUtils.substringBefore(o2.getStage(), "-");
+            //阶段的先后顺序
+            Map<String, Integer> map = new HashMap<>();
+            map.put(StageTypeEnum.NPRB.getStage(), 1);
+            map.put(StageTypeEnum.DESIGN.getStage(), 2);
+            map.put(StageTypeEnum.EVT.getStage(), 3);
+            map.put(StageTypeEnum.DVT.getStage(), 4);
+            map.put(StageTypeEnum.PVT.getStage(), 5);
+
+            if(map.get(stage1) == null || map.get(stage2) == null) {
+                return 0;
+            } else {
+                return map.get(stage1) - map.get(stage2);
+            }
+        });
+
         //持久化
+        log.info("--4.持久化保存机种[" + projectCost.getProjectName() + "]的成本数据");
         saveProjectCost(projectCost);
     }
 
@@ -114,10 +142,11 @@ public class ProjectCostServiceImpl implements ProjectCostService {
         // 通过接口获取机种的阶段信息
         List<Map<String, String>> restList = restService.getProjectStage(projectCost.getProjectName());
 
-        Map<String, ProjectStageCost> restMap = new HashMap<>();
+        Map<String, ProjectStageCost> restMap = new LinkedHashMap<>();
         restList.forEach(map -> {
             // 解析接口返回的数据
-            String stage = map.get("Stage");
+            // 阶段全部大写
+            String stage = map.get("Stage").toUpperCase();
             String process = map.get("Process");
             Double inQuantity = Double.valueOf(map.get("inQuantity"));
             Double outQuantity = Double.valueOf(map.get("outQuantity"));
@@ -152,6 +181,18 @@ public class ProjectCostServiceImpl implements ProjectCostService {
 
             projectStageCost.getStageDetails().add(stageDetail);
         });
+
+        // 补上Design、NPRB阶段
+        if(restMap.get(StageTypeEnum.NPRB.getStage()) == null){
+            ProjectStageCost projectStageCost = new ProjectStageCost(StageTypeEnum.NPRB.getStage(), projectCost);
+            projectStageCost.getStageDetails().add(new StageDetail());
+            restMap.put(StageTypeEnum.NPRB.getStage(), projectStageCost);
+        }
+        if(restMap.get(StageTypeEnum.DESIGN.getStage()) == null){
+            ProjectStageCost projectStageCost = new ProjectStageCost(StageTypeEnum.DESIGN.getStage(), projectCost);
+            projectStageCost.getStageDetails().add(new StageDetail());
+            restMap.put(StageTypeEnum.DESIGN.getStage(), projectStageCost);
+        }
 
         List<ProjectStageCost> projectStageCosts = projectCost.getProjectStageCosts();
         //更新或删除projectCost的projectStageCost
@@ -195,61 +236,70 @@ public class ProjectCostServiceImpl implements ProjectCostService {
     public void setStageCost(ProjectCost projectCost) {
         projectCost.getProjectStageCosts().forEach(projectStageCost -> {
 
-            StageCostFormula formula = costService.getStageCostFormula(projectStageCost.getStage());
-
             // 直接材料成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的直接材料成本");
             projectStageCost.setDirectMaterialCost(
-                    formula.getDirectMaterialCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getDirectMaterialCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 治工具成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的治工具成本");
             projectStageCost.setToolCost(
-                    formula.getToolCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getToolCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 验证费用
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的验证费用");
             projectStageCost.setValidationCost(
-                    formula.getValidationCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getValidationCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 生产费用
+            log.info("---计算[" + projectStageCost.getStage() + "]阶段的生产费用");
             projectStageCost.setProductionCost(
-                    formula.getProductionCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getProductionCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 重工/报废费用
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的重工/报废费用");
             projectStageCost.setReworkAndScrapCost(
-                    formula.getReworkAndScrapCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getReworkAndScrapCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 研发人员薪资费用
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的研发人员薪资费用");
             projectStageCost.setSalaryCost(
-                    formula.getSalaryCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getSalaryCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // RMA成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的RMA成本");
             projectStageCost.setRmaCost(
-                    formula.getRmaCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getRmaCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // OBA成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的OBA成本");
             projectStageCost.setObaCost(
-                    formula.getObaCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getObaCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
             // 差旅费用
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的差旅费用");
             projectStageCost.setTravelCost(
-                    formula.getTravelCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
+                    costService.getTravelCost(projectCost.getProjectName(), projectStageCost.getStage(), projectStageCost)
             );
-
-
             // 预防成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的预防成本");
             projectStageCost.setPrecautionCost(
-                    formula.computePrecautionCost(projectStageCost)
+                    costService.computePrecautionCost(projectStageCost)
             );
             // 鉴定成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的鉴定成本");
             projectStageCost.setIdentifyCost(
-                    formula.computeIdentifyCost(projectStageCost)
+                    costService.computeIdentifyCost(projectStageCost)
             );
             // 内损成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的内损成本");
             projectStageCost.setInLossCost(
-                    formula.computeInLossCost(projectStageCost)
+                    costService.computeInLossCost(projectStageCost)
             );
             // 外损成本
+            log.info("----计算[" + projectStageCost.getStage() + "]阶段的外损成本");
             projectStageCost.setOutLossCost(
-                    formula.computeOutLossCost(projectStageCost)
+                    costService.computeOutLossCost(projectStageCost)
             );
         });
     }
@@ -260,33 +310,35 @@ public class ProjectCostServiceImpl implements ProjectCostService {
      */
     @Override
     public void setProjectCost(ProjectCost projectCost) {
-
-        ProjectCostFormula formula = costService.getProjectCostFormula();
-
-        // 必要花费
-        projectCost.setNecessaryCost(
-                formula.computeNecessaryCost(projectCost)
-        );
-        // 多余花费
-        projectCost.setUnnecessaryCost(
-                formula.computeUnnecessaryCost(projectCost)
-        );
         // 预防成本
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的预防成本");
         projectCost.setPrecautionCost(
-                formula.computePrecautionCost(projectCost)
+                costService.summaryPrecautionCost(projectCost)
         );
         // 鉴定成本
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的鉴定成本");
         projectCost.setIdentifyCost(
-                formula.computeIdentifyCost(projectCost)
+                costService.summaryIdentifyCost(projectCost)
         );
         // 内损成本
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的内损成本");
         projectCost.setInLossCost(
-                formula.computeInLossCost(projectCost)
+                costService.summaryInLossCost(projectCost)
         );
         // 外损成本
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的外损成本");
         projectCost.setOutLossCost(
-                formula.computeOutLossCost(projectCost)
+                costService.summaryOutLossCost(projectCost)
         );
-
+        // 必要花费
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的必要花费");
+        projectCost.setNecessaryCost(
+                costService.summaryNecessaryCost(projectCost)
+        );
+        // 多余花费
+        log.info("----计算机种[" + projectCost.getProjectName() + "]的多余花费");
+        projectCost.setUnnecessaryCost(
+                costService.summaryUnnecessaryCost(projectCost)
+        );
     }
 }

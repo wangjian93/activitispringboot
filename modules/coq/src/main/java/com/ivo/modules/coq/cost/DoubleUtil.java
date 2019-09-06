@@ -38,4 +38,20 @@ public class DoubleUtil {
         return d;
     }
 
+    public static Double multiply(Double... values) {
+        Double d = null;
+        BigDecimal bigDecimal = new BigDecimal(1);
+        for (int i = 0; i <  values.length; i++) {
+            Double v = values[i];
+            if(v == null) {
+                return null;
+            } else {
+                bigDecimal = bigDecimal.multiply(new BigDecimal(v));
+                d = bigDecimal.setScale(SCALE, ROUND).doubleValue();
+            }
+        }
+
+        return d;
+    }
+
 }

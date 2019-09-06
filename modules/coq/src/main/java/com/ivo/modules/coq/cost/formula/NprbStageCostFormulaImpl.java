@@ -1,7 +1,16 @@
 package com.ivo.modules.coq.cost.formula;
 
 import com.ivo.modules.coq.cost.DoubleUtil;
+import com.ivo.modules.coq.domain.PlmProjectMember;
 import com.ivo.modules.coq.domain.ProjectStageCost;
+import com.ivo.modules.coq.rest.RestService;
+import com.ivo.modules.coq.service.PlmProjectMemberService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 获取NPRB阶段的成本数据
@@ -9,162 +18,76 @@ import com.ivo.modules.coq.domain.ProjectStageCost;
  * @Date: 2019-06-24 14:19
  * @Version 1.0
  */
-public class NprbStageCostFormulaImpl implements StageCostFormula {
+@Service(value = "nprbStageCostFormula")
+public class NprbStageCostFormulaImpl extends AbstractStageCostFormula {
 
-    /**
-     * NPRB阶段直接材料成本接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
+    @Autowired
+    private RestService restService;
+
+    @Autowired
+    private PlmProjectMemberService memberService;
+
     @Override
-    public Double getDirectMaterialCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段直接材料成本接口
-        return null;
+    public Double getSalaryCost(String projectName, String stage, ProjectStageCost projectStageCost) {
+
+//        List<Map<String, String>> memberList = restService.getMembers();
+
+
+
+
+        List<PlmProjectMember> memberList = memberService.getPlmMemberList(projectName);
+
+        Double sum = null;
+
+        for(PlmProjectMember member : memberList) {
+            int tianshu = 0;
+            if(StringUtils.equalsAnyIgnoreCase(member.getRole(), "PM", "PJM", "LCD RD")) {
+                tianshu = 6;
+            } else if(StringUtils.equalsAnyIgnoreCase(member.getRole(), "EE RD", "ME RD", "RD-Packing",
+                    "NPE-Array", "NPE-Cell", "NPE-Lcm")) {
+                tianshu = 3;
+            } else if(StringUtils.equalsAnyIgnoreCase(member.getRole(), "LCM TEC")) {
+                tianshu = 5;
+            }
+            sum = DoubleUtil.sum(sum, 6000D/21.5*tianshu);
+        }
+
+        //PM
+        // PJM
+        //LCD RD
+
+        //EE RD
+        //ME RD
+        //RD-Packing
+        //NPE-Cell
+        //NPE-Array
+        //NPE-Lcm
+
+
+        //LCM TEC
+
+        return sum;
     }
 
     /**
-     * NPRB阶段治工具接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getToolCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段治工具接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段验证费用成本接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getValidationCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段验证费用成本接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段生产费用成本接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getProductionCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段生产费用成本接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段重工报废费用成本接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getReworkAndScrapCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段重工报废费用成本接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段研发人员薪资成本接口
-     * @param projectName
-     * @param phase
-     * @return
-     */
-    @Override
-    public Double getSalaryCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段研发人员薪资成本接口
-        return 7586.20;
-    }
-
-    /**
-     * NPRB阶段RMA成本接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getRmaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段RMA成本接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段OBA成本接口
-     * @param projectName
-     * @param phase
-     * @return
-     */
-    @Override
-    public Double getObaCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段OBA成本接口
-        return null;
-    }
-
-    /**
-     * NPRB阶段差旅费接口
-     * @param projectName 机种
-     * @param phase 阶段
-     * @return
-     */
-    @Override
-    public Double getTravelCost(String projectName, String phase, ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段差旅费接口
-        return 0D;
-    }
-
-    /**
-     * NPRB阶段预防成本计算
-     * 预防成本 (研发人员薪资 + 差旅费)
+     * NPRB阶段的预防成本
+     * 研发人员薪资 + 差旅费
      * @param projectStageCost
      * @return
      */
     @Override
     public Double computePrecautionCost(ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段预防成本计算
-        // 预防成本 (研发人员薪资 + 差旅费)
-        Double salaryCost = projectStageCost.getSalaryCost();
-        Double travelCost = projectStageCost.getTravelCost();
-
-        return DoubleUtil.sum(salaryCost, travelCost);
+        return DoubleUtil.sum(projectStageCost.getSalaryCost() , projectStageCost.getTravelCost());
     }
 
     /**
-     * NPRB阶段鉴定成本计算
-     * @param projectStageCost
-     * @return
-     */
-    @Override
-    public Double computeIdentifyCost(ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段鉴定成本计算
-        return null;
-    }
-
-    /**
-     * NPRB阶段内损成本计算
+     * NPRB阶段的内损成本
+     * 差旅费
      * @param projectStageCost
      * @return
      */
     @Override
     public Double computeInLossCost(ProjectStageCost projectStageCost) {
-        //TODO.. NPRB阶段内损成本计算
-        return null;
-    }
-
-    /**
-     * NPRB阶段外损成本计算
-     * @param projectStageCost
-     * @return
-     */
-    @Override
-    public Double computeOutLossCost(ProjectStageCost projectStageCost) {
-        //TODO... NPRB阶段外损成本计算
-        return null;
+        return projectStageCost.getTravelCost();
     }
 }

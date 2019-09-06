@@ -1,38 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
-    <title>COQ登录</title>
+    <title>用户登录</title>
+    <link rel="stylesheet" th:href="@{/assets/css/login.css}"/>
+    <script>
+        if (window != top)
+            top.location.replace(location.href);
+    </script>
 </head>
-<body class="layui-layout-login">
-<div class="login-bg">
-    <div class="cover"></div>
-</div>
-<div class="login-content" th:th:classappend="${isCaptcha} ? 'captcha'">
-    <h1 class="login-box-title"><i class="fa fa-fw fa-user"></i>登录</h1>
-    <form class="layui-form" th:action="@{/login}" method="post">
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-username" for="username"></label>
-            <input class="layui-input" type="text" name="username" id="username" placeholder="用户名">
+<body>
+<div class="login-wrapper">
+
+    <div class="login-header">
+        <img th:src="@{/assets/images/logo.png}"> COQ 质量成本
+    </div>
+
+    <div class=" login-body">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <i class="layui-icon layui-icon-engine"></i>&nbsp;&nbsp;用户登录
+            </div>
+            <form class="layui-card-body layui-form layui-form-pane">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i class="layui-icon layui-icon-username"></i></label>
+                    <div class="layui-input-block">
+                        <input name="username" type="text" class="layui-input" placeholder="账号"
+                               lay-verType="tips" lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i class="layui-icon layui-icon-password"></i></label>
+                    <div class="layui-input-block">
+                        <input name="password" type="password" class="layui-input" placeholder="密码"
+                               lay-verType="tips" lay-verify="required" required/>
+                    </div>
+                </div>
+<!--                <div class="layui-form-item">-->
+<!--                    <label class="layui-form-label"><i class="layui-icon layui-icon-vercode"></i></label>-->
+<!--                    <div class="layui-input-block">-->
+<!--                        <div class="layui-row inline-block">-->
+<!--                            <div class="layui-col-xs7">-->
+<!--                                <input name="captcha" type="text" class="layui-input" placeholder="验证码"-->
+<!--                                       autocomplete="off" lay-verType="tips" lay-verify="required" required/>-->
+<!--                            </div>-->
+<!--                            <div class="layui-col-xs5" style="padding-left: 10px;">-->
+<!--                                <img class="login-captcha" th:src="@{/captcha}">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="layui-form-item">
+                    <a class="layui-link">帐号注册</a>
+                    <a class="layui-link pull-right">忘记密码？</a>
+                </div>
+                <div class="layui-form-item">
+                    <button lay-filter="loginSubmit" class="layui-btn layui-btn-fluid" lay-submit>登 录</button>
+                </div>
+<!--                <div class="layui-form-item login-other">-->
+<!--                    <label>第三方登录</label>-->
+<!--                    <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>-->
+<!--                    <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>-->
+<!--                    <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>-->
+<!--                </div>-->
+            </form>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-icon layui-icon-password" for="password"></label>
-            <input class="layui-input" type="password" name="password" id="password" placeholder="密码">
-        </div>
-        <div th:if="${isCaptcha}" class="layui-form-item captcha-item">
-            <label class="layui-icon layui-icon-vercode"></label>
-            <input class="layui-input" type="text" name="captcha" autocomplete="off" placeholder="验证码">
-            <img class="captcha-img" th:src="@{/captcha}" />
-        </div>
-        <div class="layui-form-item">
-            <input type="checkbox" name="rememberMe" title="记住我" lay-skin="primary">
-            <a class="layui-layout-right forget-password" href="javascript:alert('请联系超级管理员！')">忘记密码?</a>
-        </div>
-        <button type="submit" class="layui-btn layui-btn-fluid ajax-login"><i class="fa fa-sign-in fa-lg fa-fw"></i> 登录</button>
-    </form>
+    </div>
+
+    <div class="login-footer">
+<!--        <p>© 2019 <a href="https://easyweb.vip" target="_blank">EasyWeb版权所有</a></p>-->
+<!--        <p>-->
+<!--            <span><a href="https://easyweb.vip" target="_blank">前往github</a></span>-->
+<!--            <span><a href="https://easyweb.vip" target="_blank">前往gitee</a></span>-->
+<!--            <span><a href="https://easyweb.vip" target="_blank">文档说明</a></span>-->
+<!--        </p>-->
+    </div>
 </div>
 
+<!--  js部分 -->
 <script th:replace="/common/template :: script"></script>
-<script th:src="@{/js/login.js}" charset="utf-8"></script>
+<script>
+    layui.use(['layer', 'form', 'index'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var index = layui.index;
+
+        layer.open({
+            type: 1,
+            title: false,
+            shade: 0,
+            offset: '30px',
+            content: '<div style="padding: 15px;">演示系统账号：admin  密码：123456</div>'
+        });
+
+        // 表单提交
+        form.on('submit(loginSubmit)', function (obj) {
+            layer.load(2);
+            $.post('login', obj.field, function (res) {
+                if (200 == res.code) {
+                    layer.msg('登录成功', {icon: 1, time: 1500}, function () {
+                        index.clearTabCache();
+                        location.replace('./');
+                    });
+                } else {
+                    layer.closeAll('loading');
+                    layer.msg(res.msg, {icon: 5});
+                    // $('.login-captcha').trigger('click');
+                }
+            }, 'JSON');
+            return false;
+        });
+
+        // 图形验证码
+        $('.login-captcha').click(function () {
+            this.src = this.src + '?t=' + (new Date).getTime();
+        });
+    });
+</script>
 </body>
 </html>
-

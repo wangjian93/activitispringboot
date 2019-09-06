@@ -1,0 +1,84 @@
+# 服务端口配置
+server:
+  port: 8082
+  servlet:
+    context-path: /COQ
+
+spring:
+  application:
+    name: COQ Admin Client
+
+  # 接入springboot-admin管理
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+
+  # 视图配置
+  thymeleaf:
+    prefix: classpath:/templates
+    suffix: .html
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+  # 数据源配置
+  datasource:
+    # mysql数据源
+    primary:
+      jdbc-url: jdbc:mysql://localhost:3306/timo3?useSSL=false&characterEncoding=utf-8
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      connection-test-query: select 1
+
+
+    # oracle数据源
+    secondary:
+#      jdbc-url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.233)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.2.234)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=kabedw)))
+#      username: etl
+#      password: etl
+#      driver-class-name: oracle.jdbc.driver.OracleDriver
+#      connection-test-query: select 1 from dual
+      jdbc-url: jdbc:mysql://localhost:3306/timo3?useSSL=false&characterEncoding=utf-8
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      connection-test-query: select 1
+
+    third:
+#      jdbc-url: jdbc:jtds:sqlserver://10.20.2.81/EIFDB
+#      username: IVOTHS
+#      password: (2017Ths_01
+#      driver-class-name: net.sourceforge.jtds.jdbc.Driver
+#      connection-test-query: select 1
+      jdbc-url: jdbc:mysql://localhost:3306/timo3?useSSL=false&characterEncoding=utf-8
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      connection-test-query: select 1
+
+  # jpa hibernate 配置
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      primary-dialect: com.ivo.common.mysql.MySQLDialectUTF8
+#      secondary-dialect: org.hibernate.dialect.Oracle10gDialect
+      secondary-dialect: com.ivo.common.mysql.MySQLDialectUTF8
+#      third-dialect: org.hibernate.dialect.SQLServer2008Dialect
+      third-dialect: com.ivo.common.mysql.MySQLDialectUTF8
+
+#springBoot健康管理
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#cookie记住登录信息时间，默认7天（天）
+project:
+  shiro:
+    remember-me-timeout: 7
+    global-session-timeout: 1800

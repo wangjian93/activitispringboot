@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+
+    <style>
+        .text-color-blue {
+            color: blue;
+        }
+
+        .text-color-red {
+            color: red;
+        }
+
+        .layui-table td, .layui-table th {
+            border-color: #c0c4cc;
+        }
+
+        .layui-table {
+            color: #0b0a0a;
+        }
+    </style>
+
+    <style>
+        #steps {
+        }
+
+        .step-item {
+            display: inline-block;
+            line-height: 26px;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .step-item-tail {
+            width: 100%;
+            padding: 0 10px;
+            position: absolute;
+            left: 0;
+            top: 13px;
+        }
+
+        .step-item-tail i {
+            display: inline-block;
+            width: 100%;
+            height: 1px;
+            vertical-align: top;
+            background: #c2c2c2;
+            position: relative;
+        }
+        .step-item-tail-done {
+            background: #009688 !important;
+        }
+
+        .step-item-head {
+            position: relative;
+            display: inline-block;
+            height: 26px;
+            width: 26px;
+            text-align: center;
+            vertical-align: top;
+            color: #009688;
+            border: 1px solid #009688;
+            border-radius: 50%;
+            background: #ffffff;
+        }
+
+        .step-item-head.step-item-head-active {
+            background: #009688;
+            color: #ffffff;
+        }
+
+        .step-item-main {
+            background: #ffffff;
+            display: block;
+            position: relative;
+        }
+
+        .step-item-main-title {
+            font-weight: bolder;
+            color: #555555;
+        }
+        .step-item-main-desc {
+            color: #aaaaaa;
+        }
+    </style>
+
+</head>
+<body>
+<div class="layui-fluid">
+
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>新产品费用总表</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="pull-left layui-form-pane timo-search-box">
+                    <form action="">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">机种</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="projectName" th:value="${projectCost.getProject()}" placeholder="请输入机种" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn timo-search-btn" >
+                                <i class="layui-icon layui-icon-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="layui-row">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend><b th:text="${projectCost.getProject()}">机种</b> 各阶段的成本明细：</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+                                <th>阶段</th>
+                                <th>Process</th>
+                                <th>inQuantity</th>
+                                <th>outQuantity</th>
+                                <th>单位</th>
+                                <th>inDate</th>
+                                <th>outDate</th>
+                                <th>申请单</th>
+                                <th>直接材料成本</th>
+                                <th>治工具</th>
+                                <th>验证费用</th>
+                                <th>生产费用</th>
+                                <th>重工/报废费用</th>
+                                <th>研发人员薪资</th>
+                                <th>RMA</th>
+                                <th>OBA</th>
+                                <th>差旅费</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <th:block th:each="projectStageCost:${projectCost.getProjectStageCostList()}">
+                                <tr>
+                                    <td th:text="${projectStageCost.getStage()}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">阶段</td>
+
+                                    <td th:text="${stageMap.get(projectStageCost.getStage()).get(0).getProcess()}">Process</td>
+                                    <td th:text="${stageMap.get(projectStageCost.getStage()).get(0).getInQuantity()}">inQuantity</td>
+                                    <td th:text="${stageMap.get(projectStageCost.getStage()).get(0).getOutQuantity()}">outQuantity</td>
+                                    <td th:text="${stageMap.get(projectStageCost.getStage()).get(0).getUnits()}">单位</td>
+                                    <td th:text="${dateUtil.fmtDate(stageMap.get(projectStageCost.getStage()).get(0).getInDate())}">inDate</td>
+                                    <td th:text="${dateUtil.fmtDate(stageMap.get(projectStageCost.getStage()).get(0).getOutDate())}">outDate</td>
+                                    <td th:text="${stageMap.get(projectStageCost.getStage()).get(0).getEdOrEeOrOrderNumber()}">申请单</td>
+
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getDirectMaterialCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">直接材料成本</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getToolCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">治工具</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getValidationCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">验证费用</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getProductionCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">生产费用</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getReworkAndScrapCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">重工/报废费用</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getSalaryCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">研发人员薪资</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getRmaCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">RMA</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getObaCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">OBA</td>
+                                    <td th:text="${amountFormatUtils.fmtThousands(projectStageCost.getTravelCost())}" th:attr="rowspan=${stageMap.get(projectStageCost.getStage()).size()}">差旅费</td>
+                                </tr>
+
+
+                                <th:block th:each="stageDetails,stat : ${stageMap.get(projectStageCost.getStage())}">
+                                    <tr th:if="${stat.index != 0}">
+                                        <td th:text="${stageDetails.getProcess()}">Process</td>
+                                        <td th:text="${stageDetails.getInQuantity()}">inQuantity</td>
+                                        <td th:text="${stageDetails.getOutQuantity()}">outQuantity</td>
+                                        <td th:text="${stageDetails.getUnits()}">单位</td>
+                                        <td th:text="${dateUtil.fmtDate(stageDetails.getInDate())}">inDate</td>
+                                        <td th:text="${dateUtil.fmtDate(stageDetails.getOutDate())}">outDate</td>
+                                        <td th:text="${stageDetails.getEdOrEeOrOrderNumber()}">申请单</td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>二级科目：</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-row">
+                            <div class="layui-col-md6">
+                                <table class="layui-table" lay-size="sm">
+                                    <thead>
+                                    <tr>
+                                        <th>阶段</th>
+                                        <th>预防成本</th>
+                                        <th>鉴定成本</th>
+                                        <th>内损成本</th>
+                                        <th>外损成本</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="subject:${projectCost.getProjectSecondarySubjectCostList()}">
+                                        <td th:text="${subject.getStage()}">阶段</td>
+                                        <td th:text="${amountFormatUtils.fmtThousands(subject.getPrecautionCost())}" class="text-color-blue">预防成本</td>
+                                        <td th:text="${amountFormatUtils.fmtThousands(subject.getIdentifyCost())}" class="text-color-blue">鉴定成本</td>
+                                        <td th:text="${amountFormatUtils.fmtThousands(subject.getInLossCost())}" class="text-color-red">内损成本</td>
+                                        <td th:text="${amountFormatUtils.fmtThousands(subject.getOutLossCost())}" class="text-color-blue">外损成本</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="layui-col-md-offset8 layui-col-md-4">
+                                <p>预防成本：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getPrecautionCost())}" class="text-color-blue"></span></p>
+                                <p>鉴定成本：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getIdentifyCost())}" class="text-color-blue"></span></p>
+                                <p>内损成本：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getInLossCost())}" class="text-color-red"></span></p>
+                                <p>外损成本：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getOutLossCost())}" class="text-color-blue"></span></p>
+
+                                <hr>
+
+                                <p>必要花费：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getNecessaryCost())}" class="text-color-blue"></span></p>
+                                <p>多余花费：<span th:text="${amountFormatUtils.fmtThousands(projectCost.getUnnecessaryCost())}" class="text-color-red"></span></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>项目进度：</legend>
+                    <div class="layui-field-box">
+                        <div id="steps">
+                            <th:block th:each="schedule:${scheduleList}">
+                                <div class="step-item" style="width: 100px;">
+                                    <div class="step-item-tail">
+                                        <i class="step-item-tail-done"></i>
+                                    </div>
+                                    <div class="step-item-head">
+                                        <i class="layui-icon layui-icon-ok"></i>
+                                    </div>
+                                    <div class="step-item-main">
+                                        <div class="step-item-main-title" th:text="${schedule.getStage()}"></div>
+                                        <div class="step-item-main-desc" th:text="${dateUtil.fmtDate(schedule.getDate())}"></div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>项目成员：</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-row">
+                            <div class="layui-col-md6">
+                                <table class="layui-table" lay-size="sm">
+                                    <thead>
+                                    <tr>
+                                        <th>角色名</th>
+                                        <th>用户名</th>
+                                        <th>工号</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="member:${memberList}">
+                                        <td th:text="${member.getRole()}"></td>
+                                        <td th:text="${member.getEmployee()}" ></td>
+                                        <td th:text="${member.getEmployeeName()}" ></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>差旅费用信息：</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-row">
+                            <div class="layui-col-md6">
+                                <table class="layui-table" lay-size="sm">
+                                    <thead>
+                                    <tr>
+                                        <th>阶段</th>
+                                        <th>fromDate</th>
+                                        <th>toDate</th>
+                                        <th>员工</th>
+                                        <th>出差单号</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="travel:${travelList}">
+                                        <td th:text="${travel.getStage()}"></td>
+                                        <td th:text="${dateUtil.fmtDate(travel.getFromDate())}" ></td>
+                                        <td th:text="${dateUtil.fmtDate(travel.getToDate())}" ></td>
+                                        <td th:text="${travel.getEmployee()}" ></td>
+                                        <td th:text="${travel.getTravelOrder()}" ></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>EE、ED单与材料成本的关联：</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+<!--                                <th>单号</th>-->
+                                <th>ED</th>
+                                <th>EE</th>
+                                <th>厂别</th>
+                                <th>Product ID</th>
+                                <th>PFCD(BEOL)</th>
+                                <th>PFCD(TFT)</th>
+                                <th>PFCD(CF)</th>
+                                <th>工单</th>
+
+                                <th>Material</th>
+                                <th>Version</th>
+
+                                <th>BOM金额</th>
+                                <th>工单费用</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ee:${eeList}">
+<!--                                <td th:text="${ee.getOrderNumber()}">单号</td>-->
+                                <td th:text="${ee.getEdOrder()}">ED</td>
+                                <td th:text="${ee.getEeOrder()}">EE</td>
+                                <td th:text="${ee.getFactory()}">Plant</td>
+                                <td th:text="${ee.getProdId()}">ProductId</td>
+                                <td th:text="${ee.getPfcd()}">PFCD</td>
+                                <td th:text="${ee.getPfcd_tft()}">PFCD</td>
+                                <td th:text="${ee.getPfcd_cf()}">PFCD</td>
+                                <td th:text="${ee.getWo()}">工单</td>
+                                <td th:text="${ee.getMaterial()}">Material</td>
+                                <td th:text="${ee.getVersion()}">Version</td>
+                                <td th:text="${ee.getMaterialPrice()}">BOM金额</td>
+                                <td th:text="${ee.getWoCost()}">工单费用</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>BM与治工具、直接材料成本（外包薄化）、验证费用关联：</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+                                <th>stage</th>
+                                <th>fromDate</th>
+                                <th>toDate</th>
+                                <th>costType</th>
+                                <th>budgetType</th>
+                                <th>prOrderNumber</th>
+                                <th>amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="bm:${bmList}">
+                                <td th:text="${bm.getStage()}"></td>
+                                <td th:text="${dateUtil.fmtDate(bm.getFromDate())}"></td>
+                                <td th:text="${dateUtil.fmtDate(bm.getToDate())}"></td>
+                                <td th:text="${bm.getCostType()}"></td>
+                                <td th:text="${bm.getBudgetType()}"></td>
+                                <td th:text="${bm.getPrOrderNumber()}"></td>
+                                <td th:text="${bm.getAmount()}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>成本数据的抓取及计算方法：</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>接口</th>
+                                <th colspan="2">计算公式</th>
+                                <th>数据来源</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>获取机种阶段信息</td>
+                                <td colspan="2">
+                                    <p>
+                                        从PLM系统中获取机种的阶段信息<br>
+                                        传参为机种名称<br>
+                                        返回数据为机种的阶段、Process、投入时间、产出时间、投入数量、产出数量、单位、申请单（EE/ED）、完成情况
+                                    </p>
+                                </td>
+                                <td>PLM系统</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>直接材料成本</td>
+                                <td colspan="2">
+                                    <p>
+                                        各个阶段的直接材料成本计算方式为：<br>
+                                        1.根据阶段信息中的ED单号串出EE单号，<br>
+                                        2.根据EE单确定工厂（Array/Cell/Module），ProductId（Array)，PFCD（Cell），工单（Module）<br>
+                                        3.如果厂别为Array/Cell通过产品Id根据BOM确定料号，版本，数量，材料价格<br>
+                                        4.计算材料成本<br>
+                                        Array/Cell：PLM中的数量 * 材料价格 <br>
+                                        Module：通过工单直接得出成本
+                                    </p>
+                                </td>
+                                <td>EE、ED、BOM、工单</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>治工具</td>
+                                <td colspan="2">
+                                    <p>
+                                        BM系统中治工具费用捞取:<br>
+                                        按照机种名称和各阶段的时间区间从BM系统捞取治工具费用，费用包括<br>
+                                        1.资本支出：物料组含“固定资产”<br>
+                                        2.其他费用：除了“费用-委外加工费”、“14开头的料号”、“服务-检测”外的均含<br>
+                                        <p>
+                                        1).均计算为“治工具”费用；<br>
+                                        2).EVT1和DVT1 LCM投产日期作为节点，节点前作为“预防成本&必要花费”，节点后作为“内损成本&多余花费”。<br>
+                                        3).EVT2、DVT2等均按照该阶段LCM投产日期作为节点；<br>
+                                        4).如无LCM投产，则计算CELL投产日期
+                                        </p>
+                                    </p>
+                                </td>
+                                <td>BM系统</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>验证费用</td>
+                                <td colspan="2">
+                                    <p>
+                                        BM系统中验证费用:物料组含“费用-委外加工费”、“14开头的料号”<br>
+                                        1.均计算为“直接材料成本”费用；
+                                        2.EVT1和DVT1 LCM投产日期作为节点，节点前作为“预防成本&必要花费”，节点后作为“内损成本&多余花费”。
+                                        3.EVT2、DVT2等均按照该阶段LCM投产日期作为节点；
+                                        4.如无LCM投产，则计算CELL投产日期
+
+                                    </p>
+                                </td>
+                                <td>
+                                    BM系统
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>生产费用</td>
+                                <td colspan="2"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>重工/报废费用</td>
+                                <td colspan="2"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>研发人员薪资</td>
+                                <td colspan="2">
+                                    6工作日：PM、PJM、LCD RD<br>
+                                    3工作日：EE RD、ME RD 、RD-Packing 、NPE-Cell 、NPE-Array 、NPE-Lcm<br>
+                                    5工作日：LCM TEC
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>RMA</td>
+                                <td colspan="2"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>OBA</td>
+                                <td colspan="2"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>差旅费</td>
+                                <td colspan="2"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="5">11</td>
+                                <td rowspan="5">预防成本</td>
+                                <td>NPRB</td>
+                                <td>研发人员薪资 + 差旅费</td>
+                                <td rowspan="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Design</td>
+                                <td>研发人员薪资 + 治工具</td>
+                            </tr>
+                            <tr>
+                                <td>EVT</td>
+                                <td>EVT1直接材料 + EVT1治工具 + EVT1生产费用</td>
+                            </tr>
+                            <tr>
+                                <td>DVT</td>
+                                <td>DVT1直接材料 + DVT1治工具 + DVT1生产费用</td>
+                            </tr>
+                            <tr>
+                                <td>PVT</td>
+                                <td>直接材料 + 治工具 + 生产费用</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="5">12</td>
+                                <td rowspan="5">鉴定成本</td>
+                                <td>NPRB</td>
+                                <td></td>
+                                <td rowspan="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Design</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>EVT</td>
+                                <td>验证费用</td>
+                            </tr>
+                            <tr>
+                                <td>DVT</td>
+                                <td>验证费用</td>
+                            </tr>
+                            <tr>
+                                <td>PVT</td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="5">13</td>
+                                <td rowspan="5">内损成本</td>
+                                <td>NPRB</td>
+                                <td>差旅费</td>
+                                <td rowspan="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Design</td>
+                                <td>研人员薪资</td>
+                            </tr>
+                            <tr>
+                                <td>EVT</td>
+                                <td>直接材料成本 + 治工具费用 + 生产费用 + 重工报废费用 + 验证费用</td>
+                            </tr>
+                            <tr>
+                                <td>DVT</td>
+                                <td>直接材料成本 + 治工具费用 + 生产费用 + 重工报废费用 + 验证费用</td>
+                            </tr>
+                            <tr>
+                                <td>PVT</td>
+                                <td>直接材料成本 + 治工具费用 + 生产费用 + 重工报废费用 + 验证费用</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="5">14</td>
+                                <td rowspan="5">外损成本</td>
+                                <td>NPRB</td>
+                                <td></td>
+                                <td rowspan="5"></td>
+                            </tr>
+                            <tr>
+                                <td>Design</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>EVT</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>DVT</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>PVT</td>
+                                <td>OBA费用 + RMA费用</td>
+                            </tr>
+                            </tbody>
+
+                            <tr>
+                                <td>15</td>
+                                <td>必要花费</td>
+                                <td colspan="2">预防成本 + 鉴定成本</td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td>16</td>
+                                <td>多余花费</td>
+                                <td colspan="2">内损成本 + 外损成本</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="/common/template :: script"></script>
+</body>
+</html>

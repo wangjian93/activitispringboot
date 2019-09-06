@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+
+    <style>
+        .text-color-blue {
+            color: blue;
+        }
+
+        .text-color-red {
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+<div class="layui-fluid">
+
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>Vip By COQ Cost</span>
+        </div>
+        <div class="layui-card-body">
+
+            <div class="layui-row">
+                <div class="pull-left layui-form-pane timo-search-box">
+                    <form action="" class="layui-form">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">类型</label>
+                            <div class="layui-input-block">
+                                <select name="projectType" placeholder="请输选择机种类型">
+                                    <option selected>IT</option>
+                                    <option>IA</option>
+                                    <option>TOP</option>
+                                    <option>MD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">尺寸</label>
+                            <div class="layui-input-block">
+                                <select name="projectSize" placeholder="请输选择机种尺寸">
+                                    <option selected>14.0</option>
+                                    <option>15.6</option>
+                                    <option>18.95</option>
+                                    <option>23.6</option>
+                                    <option>25</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">项目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="projectName" th:value="${projectCost.getProjectName()}" placeholder="请输入机种" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn timo-search-btn" >
+                                <i class="layui-icon layui-icon-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <br/>
+
+            <div class="layui-row">
+<!--                <table class="layui-table" lay-size="sm">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>阶段</th>-->
+<!--                        <th>预防成本</th>-->
+<!--                        <th>鉴定成本</th>-->
+<!--                        <th>内损成本</th>-->
+<!--                        <th>外损成本</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="subject:${secondSubject}">-->
+<!--                        <td th:text="${subject.get('stage')}">阶段</td>-->
+<!--                        <td th:text="${projectCost.fmtMicrometer(subject.get('precautionCost'))}" class="text-color-blue">预防成本</td>-->
+<!--                        <td th:text="${projectCost.fmtMicrometer(subject.get('identifyCost'))}" class="text-color-blue">鉴定成本</td>-->
+<!--                        <td th:text="${projectCost.fmtMicrometer(subject.get('inLossCost'))}" class="text-color-red">内损成本</td>-->
+<!--                        <td th:text="${projectCost.fmtMicrometer(subject.get('outLossCost'))}" class="text-color-blue">外损成本</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+
+                <table class="layui-table" lay-size="sm">
+                    <thead>
+                    <tr>
+                        <th>二级科目</th>
+                        <th>NPRB</th>
+                        <th>Design</th>
+                        <th>EVT</th>
+                        <th>DVT</th>
+                        <th>PVT</th>
+                        <th>MP</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>预防成本</td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('NPRB')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('DESIGN')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('EVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('DVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('PVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('precautionCost').get('MP')}" class="text-color-blue"></td>
+                    </tr>
+                    <tr>
+                        <td>鉴定成本</td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('NPRB')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('DESIGN')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('EVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('DVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('PVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('identifyCost').get('MP')}" class="text-color-blue"></td>
+                    </tr>
+                    <tr>
+                        <td>内损成本</td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('NPRB')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('DESIGN')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('EVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('DVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('PVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('inLossCost').get('MP')}" class="text-color-blue"></td>
+                    </tr>
+                    <tr>
+                        <td>外损成本</td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('NPRB')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('DESIGN')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('EVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('DVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('PVT')}" class="text-color-blue"></td>
+                        <td th:text="${secondSubject2.get('outLossCost').get('MP')}" class="text-color-blue"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="/common/template :: script"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+    });
+</script>
+</body>
+</html>

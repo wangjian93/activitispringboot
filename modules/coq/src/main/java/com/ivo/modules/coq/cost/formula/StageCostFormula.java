@@ -68,11 +68,11 @@ public interface StageCostFormula {
     /**
      * 获取RMA成本
      * @param projectName 机种
-     * @param phase 阶段
+     * @param stage 阶段
      * @param projectStageCost
      * @return
      */
-    Double getRmaCost(String projectName, String phase, ProjectStageCost projectStageCost);
+    Double getRmaCost(String projectName, String stage, ProjectStageCost projectStageCost);
 
     /**
      * 获取OBA成本
@@ -80,16 +80,16 @@ public interface StageCostFormula {
      * @param projectStageCost
      * @return
      */
-    Double getObaCost(String projectName, String phase, ProjectStageCost projectStageCost);
+    Double getObaCost(String projectName, String stage, ProjectStageCost projectStageCost);
 
     /**
      * 获取差旅费用
      * @param projectName 机种
-     * @param phase 阶段
+     * @param stage 阶段
      * @param projectStageCost
      * @return
      */
-    Double getTravelCost(String projectName, String phase, ProjectStageCost projectStageCost);
+    Double getTravelCost(String projectName, String stage, ProjectStageCost projectStageCost);
 
     /**
      * 计算预防成本
