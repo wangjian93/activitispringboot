@@ -54,4 +54,14 @@ public class DoubleUtil {
         return d;
     }
 
+    public static Double divide(Double numerator, Double denominator) {
+        if(numerator == null || denominator == null) {
+            return null;
+        } else {
+            BigDecimal bigDecimal1 = new BigDecimal(numerator);
+            BigDecimal bigDecimal2 = new BigDecimal(denominator);
+            return bigDecimal1.divide(bigDecimal2, SCALE, ROUND).doubleValue();
+        }
+    }
+
 }

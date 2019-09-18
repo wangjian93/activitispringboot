@@ -3,6 +3,8 @@ package com.ivo.admin.coq.controller;
 import com.ivo.modules.coq.cost.AmountFormatUtils;
 import com.ivo.modules.coq.cost.DateUtil;
 import com.ivo.modules.coq.domain.*;
+import com.ivo.modules.coq.domain.validate.ValidateBase;
+import com.ivo.modules.coq.domain.validate.ValidateSubject;
 import com.ivo.modules.coq.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,10 @@ public class ProjectCostController {
     @Autowired
     private TravelProjectCostService travelProjectCostService;
 
+    @Autowired
+    private ValidateService validateService;
+
+
     @GetMapping("/projectCost2")
     public String projectCostView(@RequestParam(defaultValue = "N1408 R0") String projectName, Model model) {
         ProjectCost2 projectCost = projectCostService.getProject(projectName);
@@ -66,6 +72,8 @@ public class ProjectCostController {
 
         List<TravelProjectCost> travelList = travelProjectCostService.getTravelProjectCost(projectName);
 
+        List<QmsValidate> qmsValidateList = validateService.getQmsValidate(projectName);
+
         model.addAttribute("projectCost", projectCost);
         model.addAttribute("stageMap", stageMap);
         model.addAttribute("memberList", memberList);
@@ -75,6 +83,27 @@ public class ProjectCostController {
         model.addAttribute("travelList", travelList);
         model.addAttribute("amountFormatUtils", new AmountFormatUtils());
         model.addAttribute("dateUtil", new DateUtil());
+
+
+        List<ValidateSubject> validateSubjectList = validateService.getValidateSubject(2017);
+        ValidateSubject a = null;
+        ValidateSubject b = null;
+        ValidateSubject c = null;
+        for (ValidateSubject validateSubject : validateSubjectList) {
+            if(validateSubject.getSubject().equals(ValidateSubject.SUBJECT_MAINTENANCE_COST)) {
+                a = validateSubject;
+            } else if (validateSubject.getSubject().equals(ValidateSubject.SUBJECT_MANPOWER)) {
+                b = validateSubject;
+            } else if (validateSubject.getSubject().equals(ValidateSubject.SUBJECT_HUMITURE_ENERGY_CONSUMPTION)) {
+                c = validateSubject;
+            }
+        }
+        model.addAttribute("a", a==null?"":a.getAmount());
+        model.addAttribute("b", b==null?"":b.getAmount());
+        model.addAttribute("c", c==null?"":c.getAmount());
+
+
+        model.addAttribute("qmsValidateList", qmsValidateList);
         return "/coq/projectCost2";
     }
 

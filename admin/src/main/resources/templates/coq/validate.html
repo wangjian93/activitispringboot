@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>厂内验证相关</span>
+        </div>
+        <div class="layui-card-body">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>厂内验证基础费用数据：</legend>
+                <div class="layui-field-box">
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md7">
+                            <table class="layui-table" id="tableValidateBase" lay-filter="tableValidateBase"></table>
+                        </div>
+
+                        <div class="layui-col-md11">
+                            <table class="layui-table" id="tableValidateSubject" lay-filter="tableValidateSubject"></table>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>厂内验证机台：</legend>
+                <div class="layui-field-box">
+                    <div class="layui-row text-right">
+                        <button class="layui-btn layui-btn-radius icon-btn layui-btn-sm" id="btnAddValidateMachine">
+                            <i class="layui-icon layui-icon-add-1"></i>添加机台
+                        </button>
+                    </div>
+                    <table class="layui-table" id="tableValidateMachine" lay-filter="tableValidateMachine"></table>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarValidateBase">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit" lay-size="sm">修改</a>
+</script>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarValidateMachine">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" lay-size="sm">删除</a>
+</script>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="modelValidateBase">
+    <form id="modelValidateBaseForm" lay-filter="modelValidateBaseForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">年份</label>
+            <div class="layui-input-block">
+                <input name="year" placeholder="请输入账号" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item" hidden>
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input name="name" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input name="description" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-block">
+                <input name="number" placeholder="请输入密码" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+            <button class="layui-btn" lay-filter="modelSubmitValidateBase" lay-submit>保存</button>
+        </div>
+    </form>
+</script>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="modelValidateMachine">
+    <form id="modelValidateMachineForm" lay-filter="modelValidateBaseForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型</label>
+            <div class="layui-input-block">
+                <input name="type" type="radio" value="温湿度类" title="温湿度" checked/>
+                <input name="type" type="radio" value="非温湿度类" title="非温湿度"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证项目</label>
+            <div class="layui-input-block">
+                <input name="subject" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">仪器编号</label>
+            <div class="layui-input-block">
+                <input name="machineId" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">仪器名称</label>
+            <div class="layui-input-block">
+                <input name="machineName" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">厂牌</label>
+            <div class="layui-input-block">
+                <input name="label" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">型号</label>
+            <div class="layui-input-block">
+                <input name="model" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">供应商</label>
+            <div class="layui-input-block">
+                <input name="supplier" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">功率</label>
+            <div class="layui-input-block">
+                <input name="power" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">能耗</label>
+            <div class="layui-input-block">
+                <input name="energyConsumption" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+            <button class="layui-btn" lay-filter="modelSubmitValidateMachine" lay-submit>保存</button>
+        </div>
+    </form>
+</script>
+
+
+<!-- js部分 -->
+<script th:replace="/common/template :: script"></script>
+<script th:inline="none">
+    layui.use(['layer', 'form', 'table', 'util', 'admin'], function() {
+
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+
+        // 渲染表格
+        var tableValidateBase = table.render({
+            elem: '#tableValidateBase',
+            url: 'getValidateBase',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'year', title: '年份', width: 80},
+                {field: 'name', title: '名称', hide: true},
+                {field: 'description', title: '描述', minWidth: 200},
+                {field: 'number', title: '数量', width: 80},
+                {field: 'unit', title: '单位', width: 80},
+                {align: 'center', toolbar: '#tableBarValidateBase', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+        // 工具条点击事件
+        table.on('tool(tableValidateBase)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            }
+        });
+
+        // 显示表单弹窗
+        function showEditModel(m) {
+            admin.open({
+                type: 1,
+                title:  '修改数量',
+                content: $('#modelValidateBase').html(),
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    var url = 'updateValidateBase';
+                    // 回显数据
+                    form.val('modelValidateBaseForm', m);
+                    // 表单提交事件
+                    form.on('submit(modelSubmitValidateBase)', function (data) {
+                        layer.load(2);
+                        console.log(data.field);
+                        $.post(url, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 200) {
+                                layer.close(index);
+                                layer.msg(res.msg, {icon: 1});
+                                tableValidateBase.reload();
+                                tableValidateSubject.reload();
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    });
+                }
+            });
+        }
+
+
+
+        // 渲染表格
+        var tableValidateSubject = table.render({
+            elem: '#tableValidateSubject',
+            url: 'getValidateSubject',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'year', title: '年份', width: 80},
+                {field: 'subject', title: '项目'},
+                {field: 'amount', title: '金额', width: 80},
+                {field: 'currency', title: '单位', width: 80},
+                {field: 'formula', title: '计算公式', minWidth:200},
+                {field: 'remark', title: '备注', hide:true}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+        // 渲染表格
+        var tableValidateMachine = table.render({
+            elem: '#tableValidateMachine',
+            url: 'getValidateMachine',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'type', title: '类型'},
+                {field: 'subject', title: '验证项目'},
+                {field: 'machineId', title: '仪器编号'},
+                {field: 'machineName', title: '仪器名称'},
+                {field: 'label', title: '厂牌'},
+                {field: 'power', title: '功率'},
+                {field: 'model', title: '型号'},
+                {field: 'supplier', title: '供应商'},
+                {field: 'energyConsumption', title: '能耗'},
+                {align: 'center', toolbar: '#tableBarValidateMachine', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+
+        function showAddMachine() {
+            admin.open({
+                type: 1,
+                title:  '添加机台',
+                content: $('#modelValidateMachine').html(),
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    var url = 'addValidateMachine';
+                    form.render();
+                    // 表单提交事件
+                    form.on('submit(modelSubmitValidateMachine)', function (data) {
+                        layer.load(2);
+                        console.log(data.field);
+                        $.post(url, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 200) {
+                                layer.close(index);
+                                layer.msg(res.msg, {icon: 1});
+                                tableValidateMachine.reload();
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    });
+                }
+            });
+        }
+
+        // 添加
+        $('#btnAddValidateMachine').click(function () {
+            showAddMachine();
+        });
+
+        // 工具条点击事件
+        table.on('tool(tableValidateMachine)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'delete') {
+                // 删除
+                doDel(data.id, data.machineName);
+            }
+        });
+
+        // 删除
+        function doDel(id, machineName) {
+            layer.confirm('确定要删除“' + machineName + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (i) {
+                layer.close(i);
+                layer.load(2);
+                $.post('deleteValidateMachine', {
+                    id: id
+                }, function (res) {
+                    layer.closeAll('loading');
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1});
+                        tableValidateMachine.reload();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+        }
+    })
+</script>
+</body>
+</html>

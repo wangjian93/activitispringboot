@@ -445,7 +445,7 @@
                                 <td>验证费用</td>
                                 <td colspan="2">
                                     <p>
-                                        BM系统中验证费用:物料组含“费用-委外加工费”、“14开头的料号”<br>
+                                        BM系统中验证费用:物料组含“服务-检测”<br>
                                         1.均计算为“直接材料成本”费用；
                                         2.EVT1和DVT1 LCM投产日期作为节点，节点前作为“预防成本&必要花费”，节点后作为“内损成本&多余花费”。
                                         3.EVT2、DVT2等均按照该阶段LCM投产日期作为节点；
@@ -608,6 +608,52 @@
                                 <td colspan="2">内损成本 + 外损成本</td>
                                 <td></td>
                             </tr>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>厂内验证QMS数据：</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+                                <th>阶段</th>
+                                <th>验证类型</th>
+                                <th>验证项目</th>
+                                <th>实验条件</th>
+                                <th>数量</th>
+                                <th>单位</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>人力单价</th>
+                                <th>维修单价</th>
+                                <th>温湿度功耗单价</th>
+                                <th>非温湿度功耗</th>
+                                <th>人力总额</th>
+                                <th>维修总额</th>
+                                <th>功耗总额</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="qms:${qmsValidateList}">
+                                <td th:text="${qms.getStage()}"></td>
+                                <td th:text="${qms.getValidateType()}" ></td>
+                                <td th:text="${qms.getValidateSubject()}" ></td>
+                                <td th:text="${qms.getTestCondition()}" ></td>
+                                <td th:text="${qms.getQuantity()}" ></td>
+                                <td th:text="${qms.getUnit()}" ></td>
+                                <td th:text="${dateUtil.fmtDate(qms.getFromDate())}" ></td>
+                                <td th:text="${dateUtil.fmtDate(qms.getToDate())}" ></td>
+                                <td th:text="${a}"></td>
+                                <td th:text="${b}"></td>
+                                <td th:text="${c}"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
                         </table>
                     </div>
                 </fieldset>
