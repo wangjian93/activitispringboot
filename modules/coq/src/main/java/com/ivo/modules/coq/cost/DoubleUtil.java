@@ -38,6 +38,11 @@ public class DoubleUtil {
         return d;
     }
 
+    /**
+     * 相乘
+     * @param values
+     * @return
+     */
     public static Double multiply(Double... values) {
         Double d = null;
         BigDecimal bigDecimal = new BigDecimal(1);
@@ -54,6 +59,12 @@ public class DoubleUtil {
         return d;
     }
 
+    /**
+     * 相除
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return
+     */
     public static Double divide(Double numerator, Double denominator) {
         if(numerator == null || denominator == null) {
             return null;

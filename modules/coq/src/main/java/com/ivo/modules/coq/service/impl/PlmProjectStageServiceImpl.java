@@ -78,7 +78,7 @@ public class PlmProjectStageServiceImpl implements PlmProjectStageService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             plmProjectStage.setInDate(format.parse(map.get("inDate")));
-            plmProjectStage.setOutDate(format.parse(map.get("inDate")));
+            plmProjectStage.setOutDate(format.parse(map.get("outDate")));
         } catch (ParseException e) {
             e.printStackTrace();
         }

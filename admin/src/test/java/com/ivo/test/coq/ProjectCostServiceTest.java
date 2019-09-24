@@ -1,7 +1,10 @@
 package com.ivo.test.coq;
 
 import com.ivo.modules.coq.domain.ProjectCost;
+import com.ivo.modules.coq.service.PlmProjectStageService;
 import com.ivo.modules.coq.service.ProjectCostService;
+import com.ivo.modules.coq.service.ProjectCostService2;
+import com.ivo.modules.coq.service.verification.VerificationSubjectAndMachineService;
 import com.ivo.modules.hr.repository.TestRepository;
 import com.ivo.test.AbstractTest;
 import org.junit.Assert;
@@ -17,26 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProjectCostServiceTest extends AbstractTest {
 
-    @Autowired
-    private ProjectCostService projectCostService;
+
 
     @Autowired
-    private TestRepository testRepository;
+    private VerificationSubjectAndMachineService subjectAndMachineService;
 
-    @Test
-    public void test() {
-        ProjectCost projectCost = projectCostService.getProjectCost("S0171 R0");
-        Assert.assertNotNull(projectCost);
-    }
+    @Autowired
+    private PlmProjectStageService stageService;
 
     @Test
     public void test2() {
-        Double d1 = testRepository.sqlQuery1("1514015-00", "PP02");
+        subjectAndMachineService.syncElectricityBillPer();
+    }
 
-        Double d2 = testRepository.sqlQuery2("141408000-00", "E01");
-
-        Double d3 = testRepository.sqlQuery3("M140NWR8-0G1", "E13");
-        Assert.assertNotNull(d1);
+    @Test
+    public void test() {
+        stageService.syncStageFromPlm("N1408 R0");
     }
 
 }

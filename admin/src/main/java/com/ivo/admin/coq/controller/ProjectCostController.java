@@ -5,7 +5,9 @@ import com.ivo.modules.coq.cost.DateUtil;
 import com.ivo.modules.coq.domain.*;
 import com.ivo.modules.coq.domain.validate.ValidateBase;
 import com.ivo.modules.coq.domain.validate.ValidateSubject;
+import com.ivo.modules.coq.domain.verification.InPlantVerificationCost;
 import com.ivo.modules.coq.service.*;
+import com.ivo.modules.coq.service.verification.InPlantVerificationCostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,6 +53,9 @@ public class ProjectCostController {
 
     @Autowired
     private ValidateService validateService;
+
+    @Autowired
+    private InPlantVerificationCostService inPlantVerificationCostService;
 
 
     @GetMapping("/projectCost2")
@@ -104,6 +109,9 @@ public class ProjectCostController {
 
 
         model.addAttribute("qmsValidateList", qmsValidateList);
+
+        List<InPlantVerificationCost> inPlantVerificationCostList = inPlantVerificationCostService.getInPlantVerificationCost(projectName);
+        model.addAttribute("inPlantVerificationCostList", inPlantVerificationCostList);
         return "/coq/projectCost2";
     }
 

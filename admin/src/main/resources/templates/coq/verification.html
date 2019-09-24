@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>厂内验证相关</span>
+        </div>
+        <div class="layui-card-body">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>厂内验证基础费用数据：</legend>
+                <div class="layui-field-box">
+                    <div class="layui-form toolbar">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label w-auto">年份：</label>
+                                <div class="layui-input-block">
+                                    <input name="year" type="text" class="layui-input" value="2017" placeholder="输入年份"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button class="layui-btn icon-btn" id="searchBasicDataBtn"><i class="layui-icon layui-icon-search"></i>搜索</button>
+                                <button class="layui-btn icon-btn" id="addBasicDataBtn"><i class="layui-icon layui-icon-add-1"></i>添加</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md12">
+                            <table class="layui-table" id="tableBasicData" lay-filter="tableBasicData"></table>
+                        </div>
+                        <div class="layui-col-md12">
+                            <table class="layui-table" id="tableBasicData_"></table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>厂内验证机台：</legend>
+                <div class="layui-field-box">
+                    <div class="toolbar">
+                        <div class="layui-inline">
+                            <button class="layui-btn icon-btn layui-btn-radius icon-btn layui-btn-sm" id="addMachineBtn"><i class="layui-icon layui-icon-add-1"></i>添加机台</button>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md6">
+                            <span>温湿度机台</span>
+                        </div>
+                        <div class="layui-col-md12">
+                            <table class="layui-table" id="tableHumitureMachine" lay-filter="tableHumitureMachine"></table>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md6">
+                            <span>非温湿度机台</span>
+                        </div>
+                        <div class="layui-col-md12">
+                            <table class="layui-table" id="tableOtherMachine" lay-filter="tableOtherMachine"></table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>厂内验证项目：</legend>
+                <div class="layui-field-box">
+                    <div class="toolbar">
+                        <div class="layui-inline">
+                            <button class="layui-btn icon-btn layui-btn-radius icon-btn layui-btn-sm" id="searchSubjectBtn"><i class="layui-icon layui-icon-add-1"></i>添加项目</button>
+                        </div>
+                    </div>
+
+                    <table class="layui-table" id="tableVerificationSubject" lay-filter="tableVerificationSubject"></table>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarBasicData">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="edit" lay-size="sm">修改</a>
+</script>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarHumitureMachine">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" lay-size="sm">删除</a>
+</script>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarOtherMachine">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" lay-size="sm">删除</a>
+</script>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarSubject">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" lay-size="sm">删除</a>
+</script>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="modelBasicData">
+    <form id="modelBasicDataForm" lay-filter="modelBasicDataForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">年份</label>
+            <div class="layui-input-block">
+                <input name="year" placeholder="请输入账号" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item" hidden>
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input name="field" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input name="description" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-block">
+                <input name="value" placeholder="请输入密码" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">单位</label>
+            <div class="layui-input-block">
+                <input name="unit" placeholder="请输入密码" type="text" class="layui-input" maxlength="20"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+            <button class="layui-btn" lay-filter="modelSubmitBasicData" lay-submit>保存</button>
+        </div>
+    </form>
+</script>
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="modelValidateMachine">
+    <form id="modelValidateMachineForm" lay-filter="modelValidateBaseForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">设备类型</label>
+            <div class="layui-input-block">
+                <input name="type" type="radio" value="温湿度类" title="温湿度" checked/>
+                <input name="type" type="radio" value="非温湿度类" title="非温湿度"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证项目</label>
+            <div class="layui-input-block">
+                <input name="subject" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">仪器编号</label>
+            <div class="layui-input-block">
+                <input name="machineId" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">仪器名称</label>
+            <div class="layui-input-block">
+                <input name="machineName" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">厂牌</label>
+            <div class="layui-input-block">
+                <input name="label" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">型号</label>
+            <div class="layui-input-block">
+                <input name="model" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">供应商</label>
+            <div class="layui-input-block">
+                <input name="supplier" type="text" class="layui-input" maxlength="20" lay-verType="tips"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">功率</label>
+            <div class="layui-input-block">
+                <input name="power" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">能耗</label>
+            <div class="layui-input-block">
+                <input name="energyConsumption" type="text" class="layui-input" maxlength="20" lay-verType="tips" lay-verify="required"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+            <button class="layui-btn" lay-filter="modelSubmitValidateMachine" lay-submit>保存</button>
+        </div>
+    </form>
+</script>
+
+
+<!-- js部分 -->
+<script th:replace="/common/template :: script"></script>
+<script th:inline="none">
+    layui.use(['layer', 'form', 'table', 'util', 'admin'], function() {
+
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+
+        // 获取基础数据
+        var getBasicData = function() {
+            $.post(
+                "getVerificationBasicData",
+                {year: 2017},
+                function(result){
+                    var basicData = convertBasicData(result.data);
+                    console.log(basicData);
+                    var basicData_ = convertBasicData_(result.data);
+                    renderBasicDataTable(basicData);
+                    renderBasicDataTable_(basicData_);
+            });
+        };
+
+        // 转换成基础表格数据格式
+        var convertBasicData = function(data) {
+            var basicData = new Array();
+            basicData.push({"year":data.year, "field":"manPower", "description":"实验室DL人力（IVO+IVE）", "value":data.manPower, "unit":data.manPower_Unit});
+            basicData.push({"year":data.year, "field":"monthlySalary", "description":"实验室DL人员月薪基数", "value":data.monthlySalary, "unit":data.monthlySalary_Unit});
+            basicData.push({"year":data.year, "field":"humitureTotalPower", "description":"温湿度实验机台总能耗", "value":data.humitureTotalPower, "unit":data.humitureTotalPower_Unit});
+            basicData.push({"year":data.year, "field":"electricityBillPrice", "description":"电费价格", "value":data.electricityBillPrice, "unit":data.electricityBillPrice_Unit});
+            basicData.push({"year":data.year, "field":"verificationQuantity", "description":"全年实验数量", "value":data.verificationQuantity, "unit":data.verificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"humitureVerificationQuantity", "description":"全年温湿度类实验数量", "value":data.humitureVerificationQuantity, "unit":data.humitureVerificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"ortVerificationQuantity", "description":"全年ORT验证", "value":data.ortVerificationQuantity, "unit":data.ortVerificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"materialChangeVerificationQuantity", "description":"全年工程材料变更验证", "value":data.materialChangeVerificationQuantity, "unit":data.materialChangeVerificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"otherVerificationQuantity", "description":"全年其他验证", "value":data.otherVerificationQuantity, "unit":data.otherVerificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"newProductVerificationQuantity", "description":"全年新产品验证", "value":data.newProductVerificationQuantity, "unit":data.newProductVerificationQuantity_Unit});
+            basicData.push({"year":data.year, "field":"maintainCost", "description":"全年机台维护费用", "value":data.maintainCost, "unit":data.maintainCost_Unit});
+            return basicData;
+        };
+
+        var convertBasicData_ = function(data) {
+            var basicData_ = new Array();
+            basicData_.push({"year":data.year, field:"manPowerCostPer", "description":"单片人力费用", "value":data.manPowerCostPer, "unit":data.manPowerCostPer_Unit, "method":"全年机台维护费用/全年实验数量"});
+            basicData_.push({"year":data.year, field:"maintainCostPer", "description":"单片维护费用", "value":data.maintainCostPer, "unit":data.maintainCostPer_Unit, "method":"DL数量*月薪*12个月/全年实验数量"});
+            return basicData_;
+        };
+
+        // 渲染基础数据表格
+        var renderBasicDataTable = function(basicData) {
+            console.log(basicData);
+            table.render({
+                elem: '#tableBasicData',
+                data: basicData,
+                page: false,
+                limit: basicData.length,
+                cols: [[
+                    {field: 'year', title: '年份', width: 80},
+                    {field: 'field', hide: true},
+                    {field: 'description', title: '描述', minWidth: 200},
+                    {field: 'value', title: '数量', width: 80},
+                    {field: 'unit', title: '单位', width: 80},
+                    {align: 'center', toolbar: '#tableBarBasicData', title: '操作', width: 80}
+                ]]
+            });
+        };
+
+        // 工具条点击事件
+        table.on('tool(tableBasicData)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+                showBasicDataEditModel(data);
+            }
+        });
+
+        // 显示表单弹窗
+        function showBasicDataEditModel(m) {
+            console.log(m);
+            admin.open({
+                type: 1,
+                title:  '修改数量',
+                content: $('#modelBasicData').html(),
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    var url = 'updateVerificationBasicData';
+                    // 回显数据
+                    form.val('modelBasicDataForm', m);
+                    // 表单提交事件
+                    form.on('submit(modelSubmitBasicData)', function (data) {
+                        layer.load(2);
+                        $.post(url, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 200) {
+                                layer.close(index);
+                                layer.msg(res.msg, {icon: 1});
+                                getBasicData();
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    });
+                }
+            });
+        }
+
+        // 渲染表格
+        var renderBasicDataTable_ = function(basicData_) {
+            table.render({
+                elem: '#tableBasicData_',
+                data: basicData_,
+                cols: [[
+                    {field: 'year', title: '年份', width: 80},
+                    {field: 'field', hide: true},
+                    {field: 'description', title: '项目', width: 200},
+                    {field: 'value', title: '金额', width: 80},
+                    {field: 'unit', title: '单位', minWidth:80},
+                    {field: 'method', title: '计算公式', minWidth:200}
+                ]]
+            });
+        };
+
+        getBasicData();
+
+        $("#searchBasicDataBtn").click(function() {
+            getBasicData();
+        });
+        $("#searchBasicDataBtn").click(function() {
+            getBasicData();
+        });
+
+
+
+        // 温湿度机台表格
+        var tableHumitureMachine = table.render({
+            elem: '#tableHumitureMachine',
+            url: 'getHumitureMachine',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'machineNumber', title: '机台编号'},
+                {field: 'machineName', title: '机台名称'},
+                {field: 'brand', title: '厂牌'},
+                {field: 'power', title: '功率'},
+                {field: 'machineModel', title: '型号'},
+                {field: 'supplier', title: '供应商'},
+                {field: 'powerStr', title: '功率'},
+                {field: 'power', title: '能耗'},
+                {align: 'center', toolbar: '#tableBarHumitureMachine', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+        // 非温湿度机台表格
+        var tableOtherMachine = table.render({
+            elem: '#tableOtherMachine',
+            url: 'getOtherMachine',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'machineName', title: '机台名称'},
+                {field: 'brand', title: '厂牌'},
+                {field: 'power', title: '功率'},
+                {field: 'machineModel', title: '型号'},
+                {field: 'supplier', title: '供应商'},
+                {field: 'powerStr', title: '功率'},
+                {field: 'power', title: '能耗'},
+                {align: 'center', toolbar: '#tableBarOtherMachine', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+        // 温湿度机台表格工具条点击事件
+        table.on('tool(tableHumitureMachine)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'delete') {
+                // 删除
+                doDeleteMachine("deleteHumitureMachine", data.id, data.machineName);
+            }
+        });
+
+        // 非温湿度机台表格工具条点击事件
+        table.on('tool(tableOtherMachine)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'delete') {
+                // 删除
+                doDeleteMachine("deleteOtherMachine", data.id, data.machineName);
+            }
+        });
+
+        // 删除机台
+        var doDeleteMachine = function(url, id, machineName) {
+            layer.confirm('确定要删除“' + machineName + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (i) {
+                layer.close(i);
+                layer.load(2);
+                $.post(url, {
+                    id: id
+                }, function (res) {
+                    layer.closeAll('loading');
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1});
+                        tableHumitureMachine.reload();
+                        tableOtherMachine.reload();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+        };
+
+        // 验证项目表格
+        var tableVerificationSubject =  table.render({
+            elem: '#tableVerificationSubject',
+            url: 'getVerificationSubject',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'verificationSubject', title: '验证项目', width:120},
+                {field: 'productType', title: '产品类型', width: 120},
+                {field: 'verificationType', title: '验证类型', width: 80},
+                {field: 'machineName', title: '机台名称', width: 120},
+                {field: 'verificationTime', title: '实验时间 （小时）', width: 120},
+                {field: 'unit', title: '单位', width: 80},
+                {field: 'verificationCondition', title: '实验条件', width: 200},
+                {field: 'type', title: '类型', width: 80},
+                {field: 'electricityBillPer', title: '单片电费', width: 80},
+                {align: 'center', toolbar: '#tableBarSubject', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+        // 验证项目表格工具条点击事件
+        table.on('tool(tableVerificationSubject)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'delete') {
+                // 删除
+                deleteSubject(data.id, data.verificationSubject);
+            }
+        });
+
+        var deleteSubject = function(id, verificationSubject) {
+            layer.confirm('确定要删除“' + verificationSubject + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (i) {
+                layer.close(i);
+                layer.load(2);
+                $.post('deleteVerificationSubject', {
+                    id: id
+                }, function (res) {
+                    layer.closeAll('loading');
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1});
+                        tableVerificationSubject.reload();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+        };
+
+
+
+
+
+        // 渲染表格
+        var tableValidateMachine = table.render({
+            elem: '#tableValidateMachine',
+            url: 'getValidateMachine',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'type', title: '类型'},
+                {field: 'subject', title: '验证项目'},
+                {field: 'machineId', title: '仪器编号'},
+                {field: 'machineName', title: '仪器名称'},
+                {field: 'label', title: '厂牌'},
+                {field: 'power', title: '功率'},
+                {field: 'model', title: '型号'},
+                {field: 'supplier', title: '供应商'},
+                {field: 'energyConsumption', title: '能耗'},
+                {align: 'center', toolbar: '#tableBarValidateMachine', title: '操作', width: 80}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm'
+        });
+
+
+        function showAddMachine() {
+            admin.open({
+                type: 1,
+                title:  '添加机台',
+                content: $('#modelValidateMachine').html(),
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                    var url = 'addValidateMachine';
+                    form.render();
+                    // 表单提交事件
+                    form.on('submit(modelSubmitValidateMachine)', function (data) {
+                        layer.load(2);
+                        console.log(data.field);
+                        $.post(url, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 200) {
+                                layer.close(index);
+                                layer.msg(res.msg, {icon: 1});
+                                tableValidateMachine.reload();
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    });
+                }
+            });
+        }
+
+        // 添加
+        $('#btnAddValidateMachine').click(function () {
+            showAddMachine();
+        });
+
+        // 工具条点击事件
+        table.on('tool(tableValidateMachine)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'delete') {
+                // 删除
+                doDel(data.id, data.machineName);
+            }
+        });
+
+        // 删除
+        function doDel(id, machineName) {
+            layer.confirm('确定要删除“' + machineName + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (i) {
+                layer.close(i);
+                layer.load(2);
+                $.post('deleteValidateMachine', {
+                    id: id
+                }, function (res) {
+                    layer.closeAll('loading');
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1});
+                        tableValidateMachine.reload();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+        }
+    })
+</script>
+</body>
+</html>

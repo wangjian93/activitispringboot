@@ -619,39 +619,39 @@
                             <thead>
                             <tr>
                                 <th>阶段</th>
-                                <th>验证类型</th>
                                 <th>验证项目</th>
+                                <th>验证类型</th>
                                 <th>实验条件</th>
                                 <th>数量</th>
+                                <th>机台名称</th>
+                                <th>实验时间 （小时）</th>
                                 <th>单位</th>
-                                <th>开始时间</th>
-                                <th>结束时间</th>
-                                <th>人力单价</th>
-                                <th>维修单价</th>
-                                <th>温湿度功耗单价</th>
-                                <th>非温湿度功耗</th>
-                                <th>人力总额</th>
-                                <th>维修总额</th>
-                                <th>功耗总额</th>
+                                <th>类型</th>
+                                <th>单片人力费用</th>
+                                <th>单片维护费用</th>
+                                <th>单片电费</th>
+                                <th>人力费用</th>
+                                <th>维护费用</th>
+                                <th>电费</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="qms:${qmsValidateList}">
-                                <td th:text="${qms.getStage()}"></td>
-                                <td th:text="${qms.getValidateType()}" ></td>
-                                <td th:text="${qms.getValidateSubject()}" ></td>
-                                <td th:text="${qms.getTestCondition()}" ></td>
-                                <td th:text="${qms.getQuantity()}" ></td>
-                                <td th:text="${qms.getUnit()}" ></td>
-                                <td th:text="${dateUtil.fmtDate(qms.getFromDate())}" ></td>
-                                <td th:text="${dateUtil.fmtDate(qms.getToDate())}" ></td>
-                                <td th:text="${a}"></td>
-                                <td th:text="${b}"></td>
-                                <td th:text="${c}"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                            <tr th:each="verificationCost:${inPlantVerificationCostList}">
+                                <td th:text="${verificationCost.getStage()}" ></td>
+                                <td th:text="${verificationCost.getVerificationSubject()}" ></td>
+                                <td th:text="${verificationCost.getVerificationType()}" ></td>
+                                <td th:text="${verificationCost.getVerificationCondition()}" ></td>
+                                <td th:text="${verificationCost.getQuantity()}" ></td>
+                                <td th:text="${verificationCost.getMachineName()}" ></td>
+                                <td th:text="${verificationCost.getVerificationTime()}" ></td>
+                                <td th:text="${verificationCost.getUnit()}" ></td>
+                                <td th:text="${verificationCost.getType()}"></td>
+                                <td th:text="${verificationCost.getManPowerCostPer()}"></td>
+                                <td th:text="${verificationCost.getMaintainCostPer()}"></td>
+                                <td th:text="${verificationCost.getElectricityBillPer()}"></td>
+                                <td th:text="${verificationCost.getManPowerCost()}"></td>
+                                <td th:text="${verificationCost.getMaintainCost()}"></td>
+                                <td th:text="${verificationCost.getElectricityBill()}"></td>
                             </tr>
                             </tbody>
                         </table>

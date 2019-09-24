@@ -107,7 +107,7 @@ public abstract class AbstractStageCostMethod implements StageCostMethod {
         // BM验证费用部分
         Double validationCost = bmService.getValidationCost(project, stage);
 
-        // 机台验证费用部分
+        // 厂内验证费用部分
 
         projectStageCost.setValidationCost(validationCost);
     }

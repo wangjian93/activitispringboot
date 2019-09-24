@@ -142,4 +142,6 @@ public interface RestService {
 
     Double getWoCostForModuleFromBom(String wo);
 
+    List<Map<String, Object>> getQmsVerefication(String project);
+
 }
