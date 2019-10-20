@@ -110,7 +110,7 @@ public class ProjectCostController {
 
         model.addAttribute("qmsValidateList", qmsValidateList);
 
-        List<InPlantVerificationCost> inPlantVerificationCostList = inPlantVerificationCostService.getInPlantVerificationCost(projectName);
+        List<InPlantVerificationCost> inPlantVerificationCostList = inPlantVerificationCostService.getInPlantVerificationCost("N1566V R0");
         model.addAttribute("inPlantVerificationCostList", inPlantVerificationCostList);
         return "/coq/projectCost2";
     }

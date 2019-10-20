@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>机种站点</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-field-box">
+                <div class="layui-form toolbar">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label w-auto">机种：</label>
+                            <div class="layui-input-block">
+                                <input id="project" name="project" type="text" class="layui-input" value="N1408 R0" placeholder="输入机种"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn icon-btn" id="searchStationBtn"><i class="layui-icon layui-icon-search"></i>搜索</button>
+
+                            <button type="button" class="layui-btn" id="addStationBtn">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <table class="layui-table" id="tableStation"></table>
+                    </div>
+
+                    <div class="layui-col-md12">
+                        <table class="layui-table" id="tableStationRework"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script th:replace="/common/template :: script"></script>
+<script th:inline="none">
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'upload'], function() {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+
+        // 站点表格
+        var tableStation = table.render({
+            elem: '#tableStation',
+            url: 'getStations',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'project', title: '机种'},
+                {field: 'plant', title: '厂别'},
+                {field: 'station', title: '站点'},
+                {field: 'description', title: '描述'},
+                {field: 'machine', title: '机台'},
+                {field: 'manpower', title: '人工'},
+                {field: 'ndirectMaterial', title: '间耗材'},
+                {field: 'repair', title: '修理'},
+                {field: 'energy', title: '能耗'},
+                {field: 'depreciation', title: '折旧'},
+                {field: 'other', title: '其他'},
+                {field: 'charge', title: '单片费用'},
+                {field: 'sequence', title: '顺序'},
+                {field: 'uploadDate', title: '上传日期'}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm',
+            where: { project: $("#project").val() }
+        });
+
+        var tableStationRework = table.render({
+            elem: '#tableStationRework',
+            url: 'getStationReworks',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'project', title: '机种'},
+                {field: 'plant', title: '厂别'},
+                {field: 'station', title: '站点'},
+                {field: 'description', title: '描述'},
+                {field: 'machine', title: '机台'},
+                {field: 'manpower', title: '人工'},
+                {field: 'ndirectMaterial', title: '间耗材'},
+                {field: 'repair', title: '修理'},
+                {field: 'energy', title: '能耗'},
+                {field: 'depreciation', title: '折旧'},
+                {field: 'other', title: '其他'},
+                {field: 'charge', title: '单片费用'},
+                {field: 'totalIterationCharge', title: '迭代'},
+                {field: 'sequence', title: '顺序'},
+                {field: 'uploadDate', title: '上传日期'}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm',
+            where: { project: $("#project").val() }
+        });
+        $("#searchStationBtn").click(function() {
+            tableStation.reload({where: {project: $("#project").val()}});
+            tableStationRework.reload({where: {project: $("#project").val()}});
+        });
+
+
+        var upload = layui.upload;
+
+        //执行上传
+        var uploadInst = upload.render({
+            elem: '#addStationBtn' //绑定元素
+            ,url: 'upload/' //上传接口
+            ,accept: 'file'
+            ,data: {
+                project: function(){
+                    return $("#project").val();
+                }
+            }
+            ,done: function(res){
+                //上传完毕回调
+                tableStation.reload({where: {project: $("#project").val()}});
+                tableStationRework.reload({where: {project: $("#project").val()}});
+            }
+            ,error: function(res){
+                lay.msg(res);
+            }
+        });
+    })
+</script>
+</body>
+</html>

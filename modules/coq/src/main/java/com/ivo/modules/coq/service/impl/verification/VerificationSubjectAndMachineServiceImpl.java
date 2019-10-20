@@ -268,8 +268,8 @@ public class VerificationSubjectAndMachineServiceImpl implements VerificationSub
             Double totalPower = verificationBasicDate.getHumitureTotalPower();
             Double verificationQuantity = verificationBasicDate.getHumitureVerificationQuantity();
             costPer = DoubleUtil.divide(totalPower, 1000D);
-            costPer = DoubleUtil.sum(costPer, 24D, 365D);
-            costPer = DoubleUtil.sum(costPer, electricityBillPrice);
+            costPer = DoubleUtil.multiply(costPer, 24D, 365D);
+            costPer = DoubleUtil.multiply(costPer, electricityBillPrice);
             costPer = DoubleUtil.divide(costPer, verificationQuantity);
         }
         // 2.非温湿度类
@@ -284,8 +284,8 @@ public class VerificationSubjectAndMachineServiceImpl implements VerificationSub
             Double power = otherMachine.getPower();
 
             costPer = DoubleUtil.divide(power, 1000D);
-            costPer = DoubleUtil.sum(costPer, verificationTime);
-            costPer = DoubleUtil.sum(costPer, electricityBillPrice);
+            costPer = DoubleUtil.multiply(costPer, verificationTime);
+            costPer = DoubleUtil.multiply(costPer, electricityBillPrice);
         }
 
         verificationSubject.setElectricityBillPer(costPer);

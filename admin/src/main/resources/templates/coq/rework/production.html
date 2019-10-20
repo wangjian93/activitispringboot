@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/common/template :: header(~{::title},~{::link},~{::style})">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="layui-icon layui-icon-tabs"></i>
+            <span>机种生产信息</span>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-field-box">
+                <div class="layui-form toolbar">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label w-auto">机种：</label>
+                            <div class="layui-input-block">
+                                <input id="project" name="project" type="text" class="layui-input" value="N1408 R0" placeholder="输入机种"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn icon-btn" id="searchStationBtn"><i class="layui-icon layui-icon-search"></i>搜索</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md12">
+                        <table class="layui-table" id="arrayProduction"></table>
+                    </div>
+
+                    <div class="layui-col-md12">
+                        <table class="layui-table" id="cellProduction"></table>
+                    </div>
+
+                    <div class="layui-col-md12">
+                        <table class="layui-table" id="moduleProduction"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script th:replace="/common/template :: script"></script>
+<script th:inline="none">
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'upload'], function() {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+
+        // 站点表格
+        var arrayProduction = table.render({
+            elem: '#arrayProduction',
+            url: 'getArrayProduction',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'project', title: '机种'},
+                {field: 'stage', title: '阶段'},
+                {field: 'fabDate', title: 'fabDate'},
+                {field: 'station', title: '站点'},
+                {field: 'cate', title: 'EVT_CATE'},
+                {field: 'quantity', title: '数量'},
+                {field: 'prodModelId', title: 'prodModelId'},
+                {field: 'prodId', title: 'prodId'}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm',
+            where: { project: $("#project").val() }
+        });
+
+        // 站点表格
+        var cellProduction = table.render({
+            elem: '#cellProduction',
+            url: 'getCellProduction',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'project', title: '机种'},
+                {field: 'stage', title: '阶段'},
+                {field: 'fabDate', title: 'fabDate'},
+                {field: 'station', title: '站点'},
+                {field: 'cate', title: 'EVT_CATE'},
+                {field: 'quantity', title: '数量'},
+                {field: 'prodModelId', title: 'prodModelId'},
+                {field: 'prodId', title: 'prodId'},
+                {field: 'aryProdId', title: 'ARY_PROD_ID'},
+                {field: 'productType', title: 'PRODUCT_TYP'},
+                {field: 'quantity_0800', title: 'QTY_0800'}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm',
+            where: { project: $("#project").val() }
+        });
+
+        // 站点表格
+        var moduleProduction = table.render({
+            elem: '#moduleProduction',
+            url: 'getModuleProduction',
+            method: 'post',
+            cols: [[
+                {type: 'numbers', title: '#'},
+                {field: 'id', hide: true},
+                {field: 'project', title: '机种'},
+                {field: 'stage', title: '阶段'},
+                {field: 'fabDate', title: 'fabDate'},
+                {field: 'station', title: '站点'},
+                {field: 'cate', title: 'EVT_CATE'},
+                {field: 'quantity', title: '数量'},
+                {field: 'prodModelId', title: 'prodModelId'},
+                {field: 'prodId', title: 'prodId'},
+                {field: 'woId', title: '工单'},
+                {field: 'productType', title: 'PRODUCT_TYP'},
+                {field: 'scrpStation', title: 'SCRP_M_OPE_ID'}
+            ]],
+            response: {
+                statusCode: 200
+            },
+            size: 'sm',
+            where: { project: $("#project").val() }
+        });
+
+        $("#searchStationBtn").click(function() {
+            arrayProduction.reload({where: {project: $("#project").val()}});
+            cellProduction.reload({where: {project: $("#project").val()}});
+            moduleProduction.reload({where: {project: $("#project").val()}});
+        });
+    })
+</script>
+</body>
+</html>

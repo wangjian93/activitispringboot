@@ -86,8 +86,11 @@ public class InPlantVerificationCostServiceImpl implements InPlantVerificationCo
         inPlantVerificationCost.setQuantity((Double.valueOf((String)map.get("quantity"))));
     }
 
-    private void computeVerification(InPlantVerificationCost inPlantVerificationCost) {
+    public void computeVerification(InPlantVerificationCost inPlantVerificationCost) {
         VerificationSubject subject = subjectAndMachineService.getVerificationSubject(inPlantVerificationCost.getVerificationSubject());
+        if(subject == null) {
+            return;
+        }
         inPlantVerificationCost.setMachineName(subject.getMachineName());
         inPlantVerificationCost.setVerificationTime(subject.getVerificationTime());
         inPlantVerificationCost.setUnit(subject.getUnit());
